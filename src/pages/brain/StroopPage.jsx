@@ -217,8 +217,6 @@ export default function StroopPage() {
     )
   );
 
-  const xpEarned = Math.round((score / 10) + focusScore / 3);
-
   const performanceRating = focusScore >= 85 ? 5
     : focusScore >= 70 ? 4
     : focusScore >= 50 ? 3

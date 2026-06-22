@@ -571,7 +571,7 @@ export default function MemoryFlashPage() {
               </div>
 
               {/* Statistics Grid */}
-              <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="grid grid-cols-3 gap-2 mb-6">
                 <div className="bg-white border border-saathi-line rounded-2xl p-3 shadow-sm">
                   <span className="text-sm">🎯</span>
                   <p className="text-base font-extrabold text-saathi-ink mt-1">
@@ -592,13 +592,6 @@ export default function MemoryFlashPage() {
                     {bestRound}%
                   </p>
                   <p className="text-[10px] font-bold text-saathi-muted uppercase">Best Round Score</p>
-                </div>
-                <div className="bg-white border border-saathi-line rounded-2xl p-3 shadow-sm">
-                  <span className="text-sm">🏅</span>
-                  <p className="text-base font-extrabold text-saathi-ink mt-1">
-                    +{Math.round(totalCorrect * 5)} XP
-                  </p>
-                  <p className="text-[10px] font-bold text-saathi-muted uppercase">XP Earned</p>
                 </div>
               </div>
 

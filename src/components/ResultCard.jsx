@@ -1,5 +1,5 @@
 import React from "react";
-import { Check, Clock3, Medal, Target, X } from "lucide-react";
+import { Check, Clock3, Target, X } from "lucide-react";
 import { formatTimer } from "../utils/format";
 
 export default function ResultCard({ puzzle, accuracy, attempted, elapsedSeconds, solved }) {
@@ -10,14 +10,6 @@ export default function ResultCard({ puzzle, accuracy, attempted, elapsedSeconds
       </div>
       <h1 className="mt-5 text-3xl font-extrabold leading-tight text-saathi-ink">{solved ? "Puzzle Solved!" : "Puzzle Submitted"}</h1>
       <p className="mt-3 text-sm font-semibold text-saathi-muted">{solved ? "You've completed the puzzle." : "Review the solution and try the idea again."}</p>
-      <div className="mt-6 w-full rounded-2xl border border-amber-200 bg-amber-50/40 px-4 py-5 shadow-card">
-        <p className="text-xs font-extrabold uppercase text-saathi-amber">Reward Earned</p>
-        <div className="mx-auto mt-4 grid h-12 w-12 place-items-center rounded-full bg-white text-saathi-amber shadow-sm">
-          <Medal size={26} />
-        </div>
-        <p className="mt-3 text-3xl font-extrabold text-saathi-ink">+{solved ? puzzle.rewardXp : 0}<span className="ml-1 text-sm">XP</span></p>
-        <p className="mt-2 text-xs font-semibold text-saathi-muted">{solved ? "Great job! You're climbing the leaderboard" : "Solve it correctly to earn the reward"}</p>
-      </div>
       <div className="mt-5 grid w-full grid-cols-3 gap-3">
         <Metric icon={<Target size={19} />} value={`${accuracy}%`} label="Accuracy" />
         <Metric value={puzzleStats(puzzle).middleValue} label={puzzleStats(puzzle).middleLabel} />

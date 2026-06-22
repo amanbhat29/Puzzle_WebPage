@@ -400,7 +400,7 @@ export default function RuleDiscoveryPage() {
               </div>
 
               {/* Metrics Grid */}
-              <div className="grid grid-cols-2 gap-3 mb-6">
+              <div className="grid grid-cols-3 gap-2 mb-6">
                 <div className="bg-white border border-saathi-line rounded-2xl p-3 shadow-sm">
                   <span className="text-sm">⏱️</span>
                   <p className="text-base font-extrabold text-saathi-ink mt-1">
@@ -421,13 +421,6 @@ export default function RuleDiscoveryPage() {
                     {3 - hintsLeft} Used
                   </p>
                   <p className="text-[10px] font-bold text-saathi-muted uppercase">Hints Used</p>
-                </div>
-                <div className="bg-white border border-saathi-line rounded-2xl p-3 shadow-sm">
-                  <span className="text-sm">🏅</span>
-                  <p className="text-base font-extrabold text-saathi-ink mt-1">
-                    +{correctCount * 15} XP
-                  </p>
-                  <p className="text-[10px] font-bold text-saathi-muted uppercase">XP Earned</p>
                 </div>
               </div>
 

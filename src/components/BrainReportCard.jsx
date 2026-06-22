@@ -1,5 +1,5 @@
 import React from "react";
-import { Medal, Star, Trophy, Zap } from "lucide-react";
+import { Star, Trophy, Zap } from "lucide-react";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // BrainReportCard — Final brain training report with score breakdown,
@@ -16,7 +16,6 @@ export default function BrainReportCard({ report }) {
     reasoningScore = 0,
     attentionScore = 0,
     overallScore = 0,
-    xpEarned = 0,
     stars = 0,
     level = "Beginner",
   } = report;
@@ -120,22 +119,7 @@ export default function BrainReportCard({ report }) {
         </div>
       </div>
 
-      {/* ── XP Earned ─────────────────────────────────────────────────── */}
-      <div className="rounded-xl border border-amber-200 bg-amber-50/40 px-4 py-4 text-center">
-        <div className="mx-auto mb-2 grid h-10 w-10 place-items-center rounded-full bg-white text-saathi-amber shadow-sm">
-          <Medal size={22} />
-        </div>
-        <p className="text-xs font-extrabold uppercase text-amber-600">
-          XP Earned
-        </p>
-        <p
-          className="mt-1 text-3xl font-extrabold text-saathi-ink"
-          style={{ animation: "brain-score-count 0.8s ease-out 0.3s both" }}
-        >
-          +{xpEarned}
-          <span className="ml-1 text-sm font-bold text-saathi-muted">XP</span>
-        </p>
-      </div>
+
 
       {/* ── Achievement Badges ─────────────────────────────────────────── */}
       <AchievementBadges overallScore={overallScore} stars={stars} />

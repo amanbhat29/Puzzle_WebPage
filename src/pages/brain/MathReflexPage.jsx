@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Zap, Target, Clock, Award, Star, Trophy, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Zap, Target, Clock, Award, Star, RotateCcw } from 'lucide-react';
 import { generateMathQuestion } from '../../utils/generators/mathGenerator';
 import { formatTimer } from '../../utils/format';
 import { savePuzzleResult } from '../../utils/storage';
@@ -118,8 +118,6 @@ export default function MathReflexPage() {
     ? (responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length / 1000).toFixed(1)
     : '0.0';
 
-  const xpEarned = Math.round(score / 10);
-
   const performanceRating = score >= 200 ? 5
     : score >= 150 ? 4
     : score >= 100 ? 3
@@ -229,7 +227,6 @@ export default function MathReflexPage() {
             questionsCorrect={questionsCorrect}
             avgResponseTime={avgResponseTime}
             longestStreak={longestStreak}
-            xpEarned={xpEarned}
             performanceRating={performanceRating}
             performanceLabel={performanceLabel}
             onPlayAgain={startGame}
@@ -470,7 +467,6 @@ function ResultsPhase({
   questionsCorrect,
   avgResponseTime,
   longestStreak,
-  xpEarned,
   performanceRating,
   performanceLabel,
   onPlayAgain,
@@ -516,7 +512,6 @@ function ResultsPhase({
         <MetricCard label="Correct" value={questionsCorrect} icon="✅" />
         <MetricCard label="Avg Time" value={`${avgResponseTime}s`} icon={<Clock size={16} />} />
         <MetricCard label="Best Streak" value={`🔥 ${longestStreak}`} icon={<Award size={16} />} />
-        <MetricCard label="XP Earned" value={xpEarned} icon={<Trophy size={16} />} />
       </div>
 
       <div className="mt-6 grid w-full max-w-sm gap-3">

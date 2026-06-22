@@ -520,7 +520,7 @@ export default function LogicDetectivePage() {
               </div>
 
               {/* Metrics Grid */}
-              <div className="grid grid-cols-2 gap-3 mb-8">
+              <div className="grid grid-cols-3 gap-2 mb-8">
                 <div className="bg-white border border-saathi-line rounded-2xl p-3 shadow-sm">
                   <span className="text-sm">⏱️</span>
                   <p className="text-base font-extrabold text-saathi-ink mt-1">
@@ -541,13 +541,6 @@ export default function LogicDetectivePage() {
                     {wrongAttempts}
                   </p>
                   <p className="text-[10px] font-bold text-saathi-muted uppercase">Incorrect Submissions</p>
-                </div>
-                <div className="bg-white border border-saathi-line rounded-2xl p-3 shadow-sm">
-                  <span className="text-sm">🏅</span>
-                  <p className="text-base font-extrabold text-saathi-ink mt-1">
-                    +{Math.round(score * 1.5)} XP
-                  </p>
-                  <p className="text-[10px] font-bold text-saathi-muted uppercase">XP Earned</p>
                 </div>
               </div>
             </div>

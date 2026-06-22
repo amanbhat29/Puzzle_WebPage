@@ -257,10 +257,6 @@ export const calculateBrainReport = (roundResults) => {
     attentionScore * 0.15
   );
 
-  // ── XP Earned ──
-  // Base: 50 XP + up to 150 bonus based on score
-  const xpEarned = Math.round(50 + (overallScore / 100) * 150);
-
   // ── Stars (1–5) ──
   let stars;
   if (overallScore >= 90) stars = 5;
@@ -283,7 +279,6 @@ export const calculateBrainReport = (roundResults) => {
     reasoningScore,
     attentionScore,
     overallScore,
-    xpEarned,
     stars,
     level,
   };

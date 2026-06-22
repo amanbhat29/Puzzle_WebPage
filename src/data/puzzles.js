@@ -8,7 +8,6 @@ export const puzzles = [
     category: "logic",
     description: "Place one queen in each row without any queen attacking another queen.",
     estimatedTime: "3 minutes",
-    rewardXp: 2,
     question: "Place 4 queens so none of them attack each other.",
     size: 4,
     solution: [
@@ -29,7 +28,6 @@ export const puzzles = [
     category: "logic",
     description: "Fill the grid using Blue and Yellow colors.",
     estimatedTime: "3 minutes",
-    rewardXp: 2,
     question: "Fill every cell so each row and column stays balanced.",
     size: 4,
     solution: [
@@ -54,7 +52,6 @@ export const puzzles = [
     category: "logic",
     description: "Find the missing pattern.",
     estimatedTime: "1 minute",
-    rewardXp: 2,
     question: "Which option completes the pattern?",
     pattern: ["▲", "▲▲", "▲▲▲", "?"],
     options: [
@@ -75,7 +72,6 @@ export const puzzles = [
     category: "logic",
     description: "Guide the explorer through the maze and reach the treasure chest.",
     estimatedTime: "2 minutes",
-    rewardXp: 2,
     question: "Move the explorer to the treasure without crossing blocked cells.",
     size: 4,
     start: [0, 0],
@@ -97,7 +93,6 @@ export const puzzles = [
     category: "logic",
     description: "Guide the rocket to the destination planet while collecting all fuel cells.",
     estimatedTime: "3 minutes",
-    rewardXp: 2,
     question: "Collect every fuel cell, then reach the planet.",
     size: 4,
     start: [0, 0],
@@ -120,7 +115,6 @@ export const puzzles = [
     category: "brain",
     description: "Race against the clock solving rapid-fire math challenges to sharpen your mental calculation speed.",
     estimatedTime: "1 minute",
-    rewardXp: 3,
     icon: "⚡",
     route: "/brain/math-reflex",
     skills: ["Calculation Speed", "Accuracy", "Mental Math"]
@@ -134,7 +128,6 @@ export const puzzles = [
     category: "brain",
     description: "Discover hidden rules and patterns in sequences to predict what comes next.",
     estimatedTime: "3 minutes",
-    rewardXp: 3,
     icon: "🔍",
     route: "/brain/rule-discovery",
     skills: ["Pattern Recognition", "Analytical Thinking", "Reasoning"]
@@ -148,7 +141,6 @@ export const puzzles = [
     category: "brain",
     description: "Memorize flashing patterns of shapes, colors, and numbers — then recreate them from memory.",
     estimatedTime: "2 minutes",
-    rewardXp: 3,
     icon: "🧠",
     route: "/brain/memory-flash",
     skills: ["Memory", "Attention", "Recall Speed"]
@@ -162,7 +154,6 @@ export const puzzles = [
     category: "brain",
     description: "Train your selective attention and concentration by filtering out target objects from active distractors.",
     estimatedTime: "2 minutes",
-    rewardXp: 3,
     icon: "👁️",
     route: "/brain/focus-filter",
     skills: ["Attention", "Focus"]
@@ -176,7 +167,6 @@ export const puzzles = [
     category: "brain",
     description: "Overcome color-word interference and boost your cognitive control by matching target ink colors.",
     estimatedTime: "2 minutes",
-    rewardXp: 3,
     icon: "🎨",
     route: "/brain/stroop",
     skills: ["Cognitive Control", "Focus"]
@@ -190,7 +180,6 @@ export const puzzles = [
     category: "brain",
     description: "Scan the active radar screen, remember the objects, and answer fast-paced recall questions.",
     estimatedTime: "2 minutes",
-    rewardXp: 3,
     icon: "📡",
     route: "/brain/visual-radar",
     skills: ["Observation", "Visual Attention", "Short-Term Memory"]

@@ -67,7 +67,6 @@ export function savePuzzleResult({ puzzleId, score, accuracy, timeTaken, hintsUs
       timeTaken: Math.round(timeTaken), // in seconds
       timestamp: Date.now(),
       attemptNumber: history.filter((h) => h.puzzleId === Number(puzzleId)).length + 1,
-      rewardXp: puzzle.rewardXp || 2,
       hintsUsed: hintsUsed,
       difficulty: difficulty
     };
@@ -120,7 +119,6 @@ export function getStudentProgress() {
       totalTimeSpent: 0,
       bestPuzzle: 'None',
       mostPlayedPuzzle: 'None',
-      xp: 0,
       streak,
       achievements,
       skills: { speed: 50, accuracy: 50, memory: 50, attention: 50, reasoning: 50, focus: 50, observation: 50, cognitiveControl: 50, analytical: 50 },
@@ -134,7 +132,6 @@ export function getStudentProgress() {
   const totalScore = history.reduce((sum, h) => sum + h.score, 0);
   const totalAccuracy = history.reduce((sum, h) => sum + h.accuracy, 0);
   const totalTimeSpent = history.reduce((sum, h) => sum + h.timeTaken, 0);
-  const xp = history.reduce((sum, h) => sum + (h.rewardXp || 2) * 10, 0); // Convert reward points to XP
 
   // Most played & best puzzle
   const puzzleCounts = {};
@@ -178,7 +175,6 @@ export function getStudentProgress() {
     totalTimeSpent,
     bestPuzzle,
     mostPlayedPuzzle,
-    xp,
     streak,
     achievements,
     skills,

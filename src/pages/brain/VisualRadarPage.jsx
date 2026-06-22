@@ -351,8 +351,6 @@ export default function VisualRadarPage() {
     )
   );
 
-  const xpEarned = Math.round((correctAnswers * 15) + visualAttentionScore / 2);
-
   const performanceRating = visualAttentionScore >= 85 ? 5
     : visualAttentionScore >= 70 ? 4
     : visualAttentionScore >= 50 ? 3

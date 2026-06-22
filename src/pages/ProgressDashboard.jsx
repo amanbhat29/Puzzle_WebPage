@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Trophy,
-  Zap,
+  Target,
   Award,
   Clock,
   Flame,
@@ -115,7 +115,7 @@ export default function ProgressDashboard() {
               <div>
                 <h2 className="text-lg font-extrabold text-saathi-ink">Cognitive Explorer</h2>
                 <p className="text-xs font-semibold text-saathi-muted uppercase tracking-wider">
-                  Level {Math.floor(progress.xp / 100) + 1} Student
+                  Level {Math.floor(progress.totalCompleted / 3) + 1} Student
                 </p>
               </div>
             </div>
@@ -123,9 +123,9 @@ export default function ProgressDashboard() {
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="bg-white rounded-xl p-3 border border-saathi-line shadow-sm">
-                <Zap className="mx-auto text-saathi-indigo mb-1" size={18} />
-                <span className="block text-lg font-black text-saathi-ink">{progress.xp}</span>
-                <span className="text-[10px] font-bold text-saathi-muted uppercase tracking-wider">XP Earned</span>
+                <Target className="mx-auto text-saathi-indigo mb-1" size={18} />
+                <span className="block text-lg font-black text-saathi-ink">{progress.avgAccuracy}%</span>
+                <span className="text-[10px] font-bold text-saathi-muted uppercase tracking-wider">Avg Accuracy</span>
               </div>
               <div className="bg-white rounded-xl p-3 border border-saathi-line shadow-sm">
                 <Trophy className="mx-auto text-saathi-green mb-1" size={18} />
@@ -444,25 +444,20 @@ export default function ProgressDashboard() {
                                attempt.category === "logic" ? "🧩" : "🧠"}
                             </span>
                           </div>
-                          <div className="flex-1 min-w-0 pt-1.5 flex justify-between space-x-4">
-                            <div>
-                              <p className="text-xs font-extrabold text-saathi-ink">
-                                {attempt.puzzleTitle}{" "}
-                                <span className="font-semibold text-saathi-muted">
-                                  ({attempt.score} pts, {attempt.accuracy}% Acc)
-                                </span>
-                              </p>
-                              <p className="text-[10px] text-saathi-muted flex items-center gap-1 mt-0.5">
-                                <Calendar size={10} />
-                                {formatDate(attempt.timestamp)}
-                                <span className="mx-1">•</span>
-                                <Clock size={10} />
-                                {attempt.timeTaken}s
-                              </p>
-                            </div>
-                            <div className="text-right text-[10px] font-bold text-saathi-indigo shrink-0">
-                              +{attempt.rewardXp * 10} XP
-                            </div>
+                          <div className="flex-1 min-w-0 pt-1.5">
+                            <p className="text-xs font-extrabold text-saathi-ink">
+                              {attempt.puzzleTitle}{" "}
+                              <span className="font-semibold text-saathi-muted">
+                                ({attempt.score} pts, {attempt.accuracy}% Acc)
+                              </span>
+                            </p>
+                            <p className="text-[10px] text-saathi-muted flex items-center gap-1 mt-0.5">
+                              <Calendar size={10} />
+                              {formatDate(attempt.timestamp)}
+                              <span className="mx-1">•</span>
+                              <Clock size={10} />
+                              {attempt.timeTaken}s
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -487,7 +482,7 @@ export default function ProgressDashboard() {
           ) : (
             <div className="bg-red-50 border border-red-200 rounded-xl p-4">
               <p className="text-xs font-extrabold text-saathi-red mb-2 text-center">
-                Are you sure? This action deletes all XP, scores, history, and achievements forever.
+                Are you sure? This action deletes all scores, history, and achievements forever.
               </p>
               <div className="grid grid-cols-2 gap-2">
                 <button
