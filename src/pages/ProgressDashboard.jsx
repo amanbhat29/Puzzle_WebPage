@@ -221,7 +221,13 @@ export default function ProgressDashboard() {
                 { name: "Focus", key: "focus", color: "bg-saathi-red", label: "Cognitive Focus Control" },
                 { name: "Observation", key: "observation", color: "bg-saathi-cyan", label: "Visual Target Detection" },
                 { name: "Cognitive Control", key: "cognitiveControl", color: "bg-saathi-violet", label: "Response Interference Control" },
-                { name: "Analytical Thinking", key: "analytical", color: "bg-saathi-cyan", label: "Strategic Planning" }
+                { name: "Analytical Thinking", key: "analytical", color: "bg-saathi-cyan", label: "Strategic Planning" },
+                { name: "Mental Rotation", key: "mentalRotation", color: "bg-saathi-indigo", label: "Shape Manipulation" },
+                { name: "Spatial Reasoning", key: "spatialReasoning", color: "bg-saathi-amber", label: "Geometric Analysis" },
+                { name: "Direction Sense", key: "directionSense", color: "bg-saathi-green", label: "Compass Path Tracking" },
+                { name: "Spatial Orientation", key: "spatialOrientation", color: "bg-saathi-violet", label: "Navigation Orientation" },
+                { name: "Visual Processing", key: "visualProcessing", color: "bg-saathi-cyan", label: "Object Mirroring & Rotations" },
+                { name: "Object Orientation", key: "objectOrientation", color: "bg-saathi-red", label: "Visual Object Transformation" }
               ].map((skill) => {
                 const rating = progress.skills[skill.key] || 50;
                 const change = progress.growth[skill.key] || 0;
@@ -441,6 +447,9 @@ export default function ProgressDashboard() {
                                attempt.puzzleId === 10 ? "👁️" :
                                attempt.puzzleId === 11 ? "🎨" :
                                attempt.puzzleId === 12 ? "📡" :
+                               attempt.puzzleId === 13 ? "🔄" :
+                               attempt.puzzleId === 14 ? "🧭" :
+                               attempt.puzzleId === 15 ? "🪞" :
                                attempt.category === "logic" ? "🧩" : "🧠"}
                             </span>
                           </div>

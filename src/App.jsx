@@ -17,6 +17,9 @@ import BrainCircuitPage from "./pages/brain/BrainCircuitPage";
 import FocusFilterPage from "./pages/brain/FocusFilterPage";
 import StroopPage from "./pages/brain/StroopPage";
 import VisualRadarPage from "./pages/brain/VisualRadarPage";
+import ShapeRotationPage from "./pages/brain/ShapeRotationPage";
+import DirectionNavigatorPage from "./pages/brain/DirectionNavigatorPage";
+import MirrorDetectivePage from "./pages/brain/MirrorDetectivePage";
 
 export default function App() {
   return (
@@ -39,6 +42,9 @@ export default function App() {
         <Route path="/brain/focus-filter" element={<FocusFilterPage />} />
         <Route path="/brain/stroop" element={<StroopPage />} />
         <Route path="/brain/visual-radar" element={<VisualRadarPage />} />
+        <Route path="/brain/shape-rotation" element={<ShapeRotationPage />} />
+        <Route path="/brain/direction-navigator" element={<DirectionNavigatorPage />} />
+        <Route path="/brain/mirror-detective" element={<MirrorDetectivePage />} />
 
         {/* ── Catch-all ── */}
         <Route path="*" element={<Navigate to="/" replace />} />

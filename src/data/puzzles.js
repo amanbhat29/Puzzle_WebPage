@@ -183,6 +183,45 @@ export const puzzles = [
     icon: "📡",
     route: "/brain/visual-radar",
     skills: ["Observation", "Visual Attention", "Short-Term Memory"]
+  },
+  {
+    id: 13,
+    title: "Shape Rotation Challenge",
+    displayName: "Shape Rotation Challenge",
+    difficulty: "Medium",
+    type: "shape-rotation",
+    category: "brain",
+    description: "Measure mental rotation and spatial reasoning by identifying the correct rotated shape.",
+    estimatedTime: "2 minutes",
+    icon: "🔄",
+    route: "/brain/shape-rotation",
+    skills: ["Mental Rotation", "Spatial Reasoning"]
+  },
+  {
+    id: 14,
+    title: "Direction Navigator Challenge",
+    displayName: "Direction Navigator Challenge",
+    difficulty: "Medium",
+    type: "direction-navigator",
+    category: "brain",
+    description: "Measure spatial orientation and direction sense by tracking paths on a compass grid.",
+    estimatedTime: "2 minutes",
+    icon: "🧭",
+    route: "/brain/direction-navigator",
+    skills: ["Direction Sense", "Spatial Orientation"]
+  },
+  {
+    id: 15,
+    title: "Mirror & Rotation Detective",
+    displayName: "Mirror & Rotation Detective",
+    difficulty: "Medium",
+    type: "mirror-detective",
+    category: "brain",
+    description: "Measure object orientation and visual transformation through mirrors and rotations.",
+    estimatedTime: "2 minutes",
+    icon: "🪞",
+    route: "/brain/mirror-detective",
+    skills: ["Visual Processing", "Object Orientation"]
   }
 ];
 

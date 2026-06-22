@@ -120,10 +120,15 @@ export function getStudentProgress() {
       bestPuzzle: 'None',
       mostPlayedPuzzle: 'None',
       streak,
-      achievements,
-      skills: { speed: 50, accuracy: 50, memory: 50, attention: 50, reasoning: 50, focus: 50, observation: 50, cognitiveControl: 50, analytical: 50 },
+      skills: { 
+        speed: 50, accuracy: 50, memory: 50, attention: 50, reasoning: 50, focus: 50, observation: 50, cognitiveControl: 50, analytical: 50,
+        mentalRotation: 50, spatialReasoning: 50, directionSense: 50, spatialOrientation: 50, visualProcessing: 50, objectOrientation: 50
+      },
       brainScore: 50,
-      growth: { speed: 0, accuracy: 0, memory: 0, reasoning: 0, attention: 0, focus: 0, observation: 0, cognitiveControl: 0, analytical: 0 }
+      growth: { 
+        speed: 0, accuracy: 0, memory: 0, reasoning: 0, attention: 0, focus: 0, observation: 0, cognitiveControl: 0, analytical: 0,
+        mentalRotation: 0, spatialReasoning: 0, directionSense: 0, spatialOrientation: 0, visualProcessing: 0, objectOrientation: 0
+      }
     };
   }
 
@@ -162,7 +167,7 @@ export function getStudentProgress() {
   // Calculate Cognitive skills
   const skills = calculateSkills(history);
   const brainScore = Math.round(
-    (skills.speed + skills.accuracy + skills.memory + skills.reasoning + skills.attention + skills.focus + skills.observation + skills.cognitiveControl) / 8
+    (skills.speed + skills.accuracy + skills.memory + skills.reasoning + skills.attention + skills.focus + skills.observation + skills.cognitiveControl + skills.analytical + skills.mentalRotation + skills.spatialReasoning + skills.directionSense + skills.spatialOrientation + skills.visualProcessing + skills.objectOrientation) / 15
   );
 
   // Growth rates (compares current attempts vs baseline attempts)
@@ -325,7 +330,28 @@ function calculateSkills(history) {
   // Analytical thinking: Queens (1), Space Fuel (5), and Rule Discovery (8)
   const analytical = getAvg((h) => [1, 5, 8].includes(h.puzzleId), 50);
 
-  return { speed, accuracy, memory, attention, reasoning, focus, observation, cognitiveControl, analytical };
+  // Mental Rotation: Shape Rotation Challenge (13)
+  const mentalRotation = getAvg((h) => h.puzzleId === 13, 50);
+
+  // Spatial Reasoning: Shape Rotation Challenge (13)
+  const spatialReasoning = getAvg((h) => h.puzzleId === 13, 50);
+
+  // Direction Sense: Direction Navigator Challenge (14)
+  const directionSense = getAvg((h) => h.puzzleId === 14, 50);
+
+  // Spatial Orientation: Direction Navigator Challenge (14)
+  const spatialOrientation = getAvg((h) => h.puzzleId === 14, 50);
+
+  // Visual Processing: Mirror & Rotation Detective (15)
+  const visualProcessing = getAvg((h) => h.puzzleId === 15, 50);
+
+  // Object Orientation: Mirror & Rotation Detective (15)
+  const objectOrientation = getAvg((h) => h.puzzleId === 15, 50);
+
+  return { 
+    speed, accuracy, memory, attention, reasoning, focus, observation, cognitiveControl, analytical,
+    mentalRotation, spatialReasoning, directionSense, spatialOrientation, visualProcessing, objectOrientation 
+  };
 }
 
 // ─── Growth Calculation (Current vs Baseline) ──────────────────────────────
@@ -366,6 +392,12 @@ function calculateGrowth(history) {
     focus: diff(currentSkills.focus, baselineSkills.focus),
     observation: diff(currentSkills.observation, baselineSkills.observation),
     cognitiveControl: diff(currentSkills.cognitiveControl, baselineSkills.cognitiveControl),
-    analytical: diff(currentSkills.analytical, baselineSkills.analytical)
+    analytical: diff(currentSkills.analytical, baselineSkills.analytical),
+    mentalRotation: diff(currentSkills.mentalRotation, baselineSkills.mentalRotation),
+    spatialReasoning: diff(currentSkills.spatialReasoning, baselineSkills.spatialReasoning),
+    directionSense: diff(currentSkills.directionSense, baselineSkills.directionSense),
+    spatialOrientation: diff(currentSkills.spatialOrientation, baselineSkills.spatialOrientation),
+    visualProcessing: diff(currentSkills.visualProcessing, baselineSkills.visualProcessing),
+    objectOrientation: diff(currentSkills.objectOrientation, baselineSkills.objectOrientation)
   };
 }
