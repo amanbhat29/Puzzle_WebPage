@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #343143;
+  background: #ffffff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@layer components {
+  .saathi-screen {
+    @apply min-h-screen bg-gradient-to-b from-white via-saathi-mint to-white;
+  }
+
+  .phone-frame {
+    @apply mx-auto min-h-screen w-full max-w-md bg-gradient-to-b from-white via-saathi-mint to-white shadow-none
+      sm:my-6 sm:min-h-[760px] sm:overflow-hidden sm:rounded-[26px] sm:border sm:border-saathi-line sm:shadow-card
+      md:max-w-2xl lg:max-w-4xl xl:max-w-6xl;
+  }
+
+  /* Fixed footer must match .phone-frame responsive widths */
+  .phone-frame-footer {
+    @apply fixed inset-x-0 bottom-0 mx-auto grid max-w-md grid-cols-2 gap-3 border-t border-saathi-line bg-white px-4 py-3
+      md:max-w-2xl lg:max-w-4xl xl:max-w-6xl;
+  }
+
+  .triangle-shape {
+    width: 0;
+    height: 0;
+    background: transparent;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-bottom: 28px solid currentColor;
+    color: #38bdf8;
+  }
+
+  /* ── Queens Puzzle Animations ── */
+
+  .queens-place {
+    animation: queens-place-anim 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .queens-conflict {
+    animation: queens-conflict-pulse 1s ease-in-out infinite;
+  }
+
+  .queens-hint {
+    animation: queens-hint-glow 1s ease-in-out infinite;
+  }
+
+  .queens-board-enter {
+    animation: queens-board-fade 0.4s ease-out;
+  }
+
+  .queens-achievement-toast {
+    animation: queens-toast-slide 3.5s ease-in-out forwards;
+  }
+
+  .queens-achievement-badge {
+    animation: queens-place-anim 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .queens-success-bounce {
+    animation: queens-success-anim 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .queens-score-pop {
+    animation: queens-score-pop-anim 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+}
+
+@keyframes queens-place-anim {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes queens-conflict-pulse {
+  0%, 100% { box-shadow: inset 0 0 0 2px rgba(220, 38, 38, 0.3); }
+  50% { box-shadow: inset 0 0 0 3px rgba(220, 38, 38, 0.6); background-color: #FECACA; }
+}
+
+@keyframes queens-hint-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+  50% { box-shadow: 0 0 14px 4px rgba(59, 130, 246, 0.45); }
+}
+
+@keyframes queens-board-fade {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes queens-toast-slide {
+  0% { transform: translateY(-120%); opacity: 0; }
+  12% { transform: translateY(0); opacity: 1; }
+  85% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-120%); opacity: 0; }
+}
+
+@keyframes queens-success-anim {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+@keyframes queens-score-pop-anim {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* ── Brain Training Animations ── */
+
+@keyframes brain-fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes brain-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes brain-scale-in {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes brain-streak-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+@keyframes brain-card-flip {
+  0% { transform: rotateY(0deg); }
+  50% { transform: rotateY(90deg); }
+  100% { transform: rotateY(0deg); }
+}
+
+@keyframes brain-timer-ring {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: 283; }
+}
+
+@keyframes brain-score-count {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes brain-pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+  50% { box-shadow: 0 0 16px 4px rgba(99, 102, 241, 0.35); }
+}
+
+@keyframes brain-slide-in-right {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes brain-progress-fill {
+  from { width: 0%; }
+}
+
+@keyframes brain-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+@keyframes brain-confetti {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-60px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes brain-radar-draw {
+  from { stroke-dashoffset: 600; opacity: 0; }
+  to { stroke-dashoffset: 0; opacity: 1; }
+}
+
