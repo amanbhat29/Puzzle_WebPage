@@ -20,91 +20,50 @@ export const puzzles = [
     explanation: "A queen attacks in the same row, same column, and diagonally. This solution places exactly one queen in every row and column, with no diagonal attacks."
   },
   {
-    id: 2,
-    title: "Color Balance Challenge",
-    displayName: "Color Balance Challenge",
-    difficulty: "Medium",
-    type: "color-balance",
-    category: "logic",
-    description: "Fill the grid using Blue and Yellow colors.",
-    estimatedTime: "3 minutes",
-    question: "Fill every cell so each row and column stays balanced.",
-    size: 4,
-    solution: [
-      ["B", "B", "Y", "Y"],
-      ["Y", "Y", "B", "B"],
-      ["B", "Y", "B", "Y"],
-      ["Y", "B", "Y", "B"]
-    ],
-    rules: [
-      "Each row has 2 Blue and 2 Yellow cells",
-      "Each column has 2 Blue and 2 Yellow cells",
-      "No three same colors touch in a row or column"
-    ],
-    explanation: "Every row and column must contain two Blue and two Yellow cells. The completed grid also avoids three matching colors in a line."
-  },
-  {
     id: 3,
-    title: "Pattern Detective",
-    displayName: "Pattern Detective",
+    title: "Pattern Detection",
+    displayName: "Pattern Detection",
     difficulty: "Easy",
-    type: "pattern-detective",
+    type: "pattern-detection",
     category: "logic",
-    description: "Find the missing pattern.",
-    estimatedTime: "1 minute",
-    question: "Which option completes the pattern?",
-    pattern: ["▲", "▲▲", "▲▲▲", "?"],
-    options: [
-      { id: "a", label: "A", text: "▲▲▲▲" },
-      { id: "b", label: "B", text: "▲▲" },
-      { id: "c", label: "C", text: "▲▲▲▲▲" },
-      { id: "d", label: "D", text: "▲" }
-    ],
-    correctOptionId: "a",
-    explanation: "The number of triangles increases by one in every step."
-  },
-  {
-    id: 4,
-    title: "Treasure Hunt Maze",
-    displayName: "Treasure Hunt Maze",
-    difficulty: "Medium",
-    type: "treasure-maze",
-    category: "logic",
-    description: "Guide the explorer through the maze and reach the treasure chest.",
+    description: "Train pattern recognition, sequence detection, and logical thinking.",
     estimatedTime: "2 minutes",
-    question: "Move the explorer to the treasure without crossing blocked cells.",
-    size: 4,
-    start: [0, 0],
-    goal: [3, 3],
-    obstacles: [
-      [1, 1],
-      [1, 2],
-      [2, 2]
-    ],
-    rules: ["Reach the treasure chest", "Avoid obstacles", "Cannot move through blocked cells", "Track moves taken"],
-    explanation: "The explorer must move around the blocked cells and land on the treasure chest. Arrow buttons and keyboard arrows both move one cell at a time."
+    question: "Complete the sequence by finding the next element."
   },
   {
-    id: 5,
-    title: "Space Fuel Mission",
-    displayName: "Space Fuel Mission",
-    difficulty: "Medium-Hard",
-    type: "space-fuel",
+    id: 16,
+    title: "Elimination Grid Challenge",
+    displayName: "Elimination Grid Challenge",
+    difficulty: "Medium",
+    type: "elimination-grid",
     category: "logic",
-    description: "Guide the rocket to the destination planet while collecting all fuel cells.",
+    description: "Develop deductive reasoning and logical thinking by solving elimination grid clues.",
     estimatedTime: "3 minutes",
-    question: "Collect every fuel cell, then reach the planet.",
-    size: 4,
-    start: [0, 0],
-    goal: [3, 3],
-    fuelCells: [
-      [0, 1],
-      [1, 1],
-      [2, 2]
-    ],
-    rules: ["Collect every fuel cell", "Reach the destination planet", "Rocket cannot finish before collecting all fuel", "Track moves taken"],
-    explanation: "The rocket must visit every fuel cell before landing on the destination planet. Once all fuel is collected, the planet completes the mission."
+    question: "Analyze the clues and eliminate possibilities to deduce the correct match."
   },
+  {
+    id: 17,
+    title: "Number Logic Matrix",
+    displayName: "Number Logic Matrix",
+    difficulty: "Medium",
+    type: "number-matrix",
+    category: "logic",
+    description: "Identify patterns and mathematical logic inside number matrices to find the missing cell.",
+    estimatedTime: "3 minutes",
+    question: "Find the missing number in the matrix pattern."
+  },
+  {
+    id: 18,
+    title: "Code Breaker Challenge",
+    displayName: "Code Breaker Challenge",
+    difficulty: "Medium",
+    type: "code-breaker",
+    category: "logic",
+    description: "Discover hidden rule encodings and apply them to decode target word codes.",
+    estimatedTime: "3 minutes",
+    question: "Crack the secret code based on the examples."
+  },
+
   // ── Brain Training & Cognitive Skills Puzzles ──
   {
     id: 6,

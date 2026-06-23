@@ -35,8 +35,11 @@ export function AttemptProvider({ children }) {
     }));
   }, []);
 
-  const submitAttempt = useCallback((puzzleId, elapsedSeconds, isCorrect) => {
+  const submitAttempt = useCallback((puzzleId, elapsedSeconds, isCorrect, customScore = null, customAccuracy = null, customDifficulty = null, extraMetrics = {}) => {
     setAttempts((current) => {
+      const finalScore = customScore !== null ? customScore : (isCorrect ? 10 : 0);
+      const finalAccuracy = customAccuracy !== null ? customAccuracy : (isCorrect ? 100 : 0);
+
       const updated = {
         ...current,
         [puzzleId]: {
@@ -44,6 +47,12 @@ export function AttemptProvider({ children }) {
           ...current[puzzleId],
           elapsedSeconds,
           isCorrect,
+          answer: extraMetrics.roundResults ? {
+            questionsSolved: extraMetrics.questionsSolved,
+            bestStreak: extraMetrics.bestStreak,
+            accuracy: finalAccuracy,
+            roundResults: extraMetrics.roundResults
+          } : current[puzzleId]?.answer,
           submittedAt: Date.now()
         }
       };
@@ -51,14 +60,17 @@ export function AttemptProvider({ children }) {
       // Log attempt to progress analytics
       savePuzzleResult({
         puzzleId,
-        score: isCorrect ? 10 : 0,
-        accuracy: isCorrect ? 100 : 0,
-        timeTaken: elapsedSeconds
+        score: finalScore,
+        accuracy: finalAccuracy,
+        timeTaken: elapsedSeconds,
+        difficulty: customDifficulty || 'Medium',
+        ...extraMetrics
       });
 
       return updated;
     });
   }, []);
+
 
   const value = useMemo(
     () => ({

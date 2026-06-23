@@ -7,6 +7,10 @@ import SecondaryButton from "../components/SecondaryButton";
 import { useAttempt } from "../context/AttemptContext";
 import { getPuzzleById } from "../data/puzzles";
 import { hasAnswer, validatePuzzle } from "../utils/puzzleValidation";
+import PatternDetectionGame from "../components/boards/PatternDetectionGame";
+import EliminationGridGame from "../components/boards/EliminationGridGame";
+import NumberMatrixGame from "../components/boards/NumberMatrixGame";
+import CodeBreakerGame from "../components/boards/CodeBreakerGame";
 
 export default function PuzzleAttemptPage() {
   const { id = "1" } = useParams();
@@ -27,6 +31,23 @@ export default function PuzzleAttemptPage() {
   if (!puzzle) {
     return <NotFound />;
   }
+
+  if (puzzle.type === "pattern-detection") {
+    return <PatternDetectionGame puzzle={puzzle} />;
+  }
+
+  if (puzzle.type === "elimination-grid") {
+    return <EliminationGridGame puzzle={puzzle} />;
+  }
+
+  if (puzzle.type === "number-matrix") {
+    return <NumberMatrixGame puzzle={puzzle} />;
+  }
+
+  if (puzzle.type === "code-breaker") {
+    return <CodeBreakerGame puzzle={puzzle} />;
+  }
+
 
   const attempt = getAttempt(puzzle.id);
   const answered = hasAnswer(puzzle, attempt.answer);

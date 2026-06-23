@@ -17,6 +17,9 @@ export default function ResultPage() {
   const attempt = getAttempt(puzzle.id);
   const isCorrect = Boolean(attempt.isCorrect);
   const attempted = attempt.answer ? 1 : 0;
+  const accuracy = (attempt.answer && typeof attempt.answer === "object" && typeof attempt.answer.accuracy === "number")
+    ? attempt.answer.accuracy
+    : (isCorrect ? 100 : 0);
   const resultPuzzle = { ...puzzle, latestAnswer: attempt.answer, elapsedSeconds: attempt.elapsedSeconds, attempted };
 
   return (
@@ -24,7 +27,7 @@ export default function ResultPage() {
       <div className="phone-frame relative bg-white">
         <ResultCard
           puzzle={resultPuzzle}
-          accuracy={isCorrect ? 100 : 0}
+          accuracy={accuracy}
           attempted={attempted}
           elapsedSeconds={attempt.elapsedSeconds}
           solved={isCorrect}

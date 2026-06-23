@@ -52,7 +52,7 @@ export const ACHIEVEMENTS = [
 /**
  * Saves a completed puzzle attempt. Calculates streaks and unlocks badges.
  */
-export function savePuzzleResult({ puzzleId, score, accuracy, timeTaken, hintsUsed = null, difficulty = 'medium' }) {
+export function savePuzzleResult({ puzzleId, score, accuracy, timeTaken, hintsUsed = null, difficulty = 'medium', questionsSolved = null, bestStreak = null, patternRecognitionScore = null }) {
   try {
     const history = JSON.parse(localStorage.getItem('cs_puzzle_history') || '[]');
     const puzzle = puzzles.find((p) => p.id === Number(puzzleId));
@@ -70,6 +70,10 @@ export function savePuzzleResult({ puzzleId, score, accuracy, timeTaken, hintsUs
       hintsUsed: hintsUsed,
       difficulty: difficulty
     };
+
+    if (questionsSolved !== null) newAttempt.questionsSolved = questionsSolved;
+    if (bestStreak !== null) newAttempt.bestStreak = bestStreak;
+    if (patternRecognitionScore !== null) newAttempt.patternRecognitionScore = patternRecognitionScore;
 
     history.push(newAttempt);
     localStorage.setItem('cs_puzzle_history', JSON.stringify(history));
@@ -122,12 +126,12 @@ export function getStudentProgress() {
       streak,
       skills: { 
         speed: 50, accuracy: 50, memory: 50, attention: 50, reasoning: 50, focus: 50, observation: 50, cognitiveControl: 50, analytical: 50,
-        mentalRotation: 50, spatialReasoning: 50, directionSense: 50, spatialOrientation: 50, visualProcessing: 50, objectOrientation: 50
+        mentalRotation: 50, spatialReasoning: 50, directionSense: 50, spatialOrientation: 50, visualProcessing: 50, objectOrientation: 50, patternRecognition: 50
       },
       brainScore: 50,
       growth: { 
         speed: 0, accuracy: 0, memory: 0, reasoning: 0, attention: 0, focus: 0, observation: 0, cognitiveControl: 0, analytical: 0,
-        mentalRotation: 0, spatialReasoning: 0, directionSense: 0, spatialOrientation: 0, visualProcessing: 0, objectOrientation: 0
+        mentalRotation: 0, spatialReasoning: 0, directionSense: 0, spatialOrientation: 0, visualProcessing: 0, objectOrientation: 0, patternRecognition: 0
       }
     };
   }
@@ -167,7 +171,7 @@ export function getStudentProgress() {
   // Calculate Cognitive skills
   const skills = calculateSkills(history);
   const brainScore = Math.round(
-    (skills.speed + skills.accuracy + skills.memory + skills.reasoning + skills.attention + skills.focus + skills.observation + skills.cognitiveControl + skills.analytical + skills.mentalRotation + skills.spatialReasoning + skills.directionSense + skills.spatialOrientation + skills.visualProcessing + skills.objectOrientation) / 15
+    (skills.speed + skills.accuracy + skills.memory + skills.reasoning + skills.attention + skills.focus + skills.observation + skills.cognitiveControl + skills.analytical + skills.mentalRotation + skills.spatialReasoning + skills.directionSense + skills.spatialOrientation + skills.visualProcessing + skills.objectOrientation + skills.patternRecognition) / 16
   );
 
   // Growth rates (compares current attempts vs baseline attempts)
@@ -327,8 +331,8 @@ function calculateSkills(history) {
   // Cognitive Control: Stroop Challenge (11)
   const cognitiveControl = getAvg((h) => h.puzzleId === 11, 50);
 
-  // Analytical thinking: Queens (1), Space Fuel (5), and Rule Discovery (8)
-  const analytical = getAvg((h) => [1, 5, 8].includes(h.puzzleId), 50);
+  // Analytical thinking: Queens (1), Pattern Detection (3), Space Fuel (5), Rule Discovery (8), Elimination Grid (16), Number Matrix (17), and Code Breaker (18)
+  const analytical = getAvg((h) => [1, 3, 5, 8, 16, 17, 18].includes(h.puzzleId), 50);
 
   // Mental Rotation: Shape Rotation Challenge (13)
   const mentalRotation = getAvg((h) => h.puzzleId === 13, 50);
@@ -348,9 +352,13 @@ function calculateSkills(history) {
   // Object Orientation: Mirror & Rotation Detective (15)
   const objectOrientation = getAvg((h) => h.puzzleId === 15, 50);
 
+  // Pattern Recognition: Pattern Detection (3), Rule Discovery (8), Number Matrix (17), and Code Breaker (18)
+  const patternRecognition = getAvg((h) => [3, 8, 17, 18].includes(h.puzzleId), 50);
+
   return { 
     speed, accuracy, memory, attention, reasoning, focus, observation, cognitiveControl, analytical,
-    mentalRotation, spatialReasoning, directionSense, spatialOrientation, visualProcessing, objectOrientation 
+    mentalRotation, spatialReasoning, directionSense, spatialOrientation, visualProcessing, objectOrientation,
+    patternRecognition
   };
 }
 
@@ -372,7 +380,7 @@ function calculateGrowth(history) {
 
   // If we still can't form groups to compare, return zero growths
   if (baselineGroup.length === 0 || currentGroup.length === 0) {
-    return { speed: 0, accuracy: 0, memory: 0, reasoning: 0, attention: 0, focus: 0, observation: 0, cognitiveControl: 0, analytical: 0 };
+    return { speed: 0, accuracy: 0, memory: 0, reasoning: 0, attention: 0, focus: 0, observation: 0, cognitiveControl: 0, analytical: 0, mentalRotation: 0, spatialReasoning: 0, directionSense: 0, spatialOrientation: 0, visualProcessing: 0, objectOrientation: 0, patternRecognition: 0 };
   }
 
   const baselineSkills = calculateSkills(baselineGroup);
@@ -398,6 +406,7 @@ function calculateGrowth(history) {
     directionSense: diff(currentSkills.directionSense, baselineSkills.directionSense),
     spatialOrientation: diff(currentSkills.spatialOrientation, baselineSkills.spatialOrientation),
     visualProcessing: diff(currentSkills.visualProcessing, baselineSkills.visualProcessing),
-    objectOrientation: diff(currentSkills.objectOrientation, baselineSkills.objectOrientation)
+    objectOrientation: diff(currentSkills.objectOrientation, baselineSkills.objectOrientation),
+    patternRecognition: diff(currentSkills.patternRecognition, baselineSkills.patternRecognition)
   };
 }

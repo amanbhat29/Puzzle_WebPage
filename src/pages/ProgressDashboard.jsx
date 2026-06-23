@@ -218,6 +218,7 @@ export default function ProgressDashboard() {
                 { name: "Memory", key: "memory", color: "bg-saathi-indigo", label: "Pattern Recall" },
                 { name: "Attention", key: "attention", color: "bg-saathi-violet", label: "Selective Concentration" },
                 { name: "Reasoning", key: "reasoning", color: "bg-saathi-amber", label: "Logical Deduction" },
+                { name: "Pattern Recognition", key: "patternRecognition", color: "bg-saathi-green", label: "Sequence Detection" },
                 { name: "Focus", key: "focus", color: "bg-saathi-red", label: "Cognitive Focus Control" },
                 { name: "Observation", key: "observation", color: "bg-saathi-cyan", label: "Visual Target Detection" },
                 { name: "Cognitive Control", key: "cognitiveControl", color: "bg-saathi-violet", label: "Response Interference Control" },

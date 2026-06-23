@@ -32,6 +32,14 @@ function puzzleStats(puzzle) {
       rightLabel: "Moves"
     };
   }
+  if (["pattern-detection", "pattern-detective", "elimination-grid", "number-matrix", "code-breaker"].includes(puzzle.type)) {
+    return {
+      middleValue: answer ? `${answer.questionsSolved ?? 0}/5` : "0/5",
+      middleLabel: "Solved",
+      rightValue: answer?.bestStreak ?? 0,
+      rightLabel: "Best Streak"
+    };
+  }
   return { middleValue: `${puzzle.attempted ?? 1}/1`, middleLabel: "Attempted", rightLabel: "Time" };
 }
 
