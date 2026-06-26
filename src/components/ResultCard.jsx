@@ -32,7 +32,7 @@ function puzzleStats(puzzle) {
       rightLabel: "Moves"
     };
   }
-  if (["pattern-detection", "pattern-detective", "elimination-grid", "number-matrix", "code-breaker"].includes(puzzle.type)) {
+  if (["pattern-detection", "pattern-detective", "elimination-grid", "number-matrix", "code-breaker", "word-detective", "word-ladder"].includes(puzzle.type)) {
     return {
       middleValue: answer ? `${answer.questionsSolved ?? 0}/5` : "0/5",
       middleLabel: "Solved",

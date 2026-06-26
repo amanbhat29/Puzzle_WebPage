@@ -5,6 +5,7 @@ import { generateNumberMatrix } from "../../utils/generators/numberMatrixGenerat
 import { useAttempt } from "../../context/AttemptContext";
 import PrimaryButton from "../PrimaryButton";
 import DifficultySelector from "../DifficultySelector";
+import PuzzleIntroduction from "../PuzzleIntroduction";
 
 const TOTAL_ROUNDS = 5;
 
@@ -148,42 +149,14 @@ export default function NumberMatrixGame({ puzzle }) {
         
         {/* ── SETUP PHASE ──────────────────────────────────────────────────── */}
         {phase === "setup" && (
-          <div className="flex-1 flex flex-col justify-between animate-[brain-fade-in-up_0.4s_ease-out]">
-            <div>
-              <header className="flex items-center gap-3 mb-6">
-                <button
-                  onClick={() => navigate("/")}
-                  className="p-2 rounded-xl hover:bg-saathi-line transition text-saathi-ink"
-                  aria-label="Back to home"
-                >
-                  <ArrowLeft size={20} />
-                </button>
-                <div>
-                  <p className="text-xs font-bold text-saathi-green">Class Saathi Puzzles</p>
-                  <h1 className="text-2xl font-extrabold text-saathi-ink">
-                    Number Logic Matrix
-                  </h1>
-                </div>
-              </header>
-
-              <p className="text-sm font-semibold text-saathi-muted mb-8 leading-relaxed">
-                Develop strong pattern recognition and analytical logic skills. Analyze number trends across rows and columns to find the missing value in the matrix.
-              </p>
-
-              {/* Select Difficulty */}
-              <div className="mb-8">
-                <label className="block text-xs font-black text-saathi-ink uppercase tracking-wider mb-3">
-                  Select Difficulty
-                </label>
-                <DifficultySelector selected={difficulty} onChange={setDifficulty} />
-              </div>
-            </div>
-
-            <PrimaryButton onClick={startGame} className="w-full">
-              <Play size={18} fill="currentColor" />
-              Start Challenge
-            </PrimaryButton>
-          </div>
+          <PuzzleIntroduction
+            type="number-matrix"
+            difficulty={difficulty}
+            setDifficulty={setDifficulty}
+            onStart={startGame}
+            onBack={() => navigate("/")}
+            title="Number Logic Matrix"
+          />
         )}
 
         {/* ── PLAYING PHASE ────────────────────────────────────────────────── */}

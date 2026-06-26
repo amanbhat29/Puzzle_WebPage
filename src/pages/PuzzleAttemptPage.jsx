@@ -11,6 +11,8 @@ import PatternDetectionGame from "../components/boards/PatternDetectionGame";
 import EliminationGridGame from "../components/boards/EliminationGridGame";
 import NumberMatrixGame from "../components/boards/NumberMatrixGame";
 import CodeBreakerGame from "../components/boards/CodeBreakerGame";
+import WordDetectiveGame from "../components/boards/WordDetectiveGame";
+import WordLadderGame from "../components/boards/WordLadderGame";
 
 export default function PuzzleAttemptPage() {
   const { id = "1" } = useParams();
@@ -46,6 +48,14 @@ export default function PuzzleAttemptPage() {
 
   if (puzzle.type === "code-breaker") {
     return <CodeBreakerGame puzzle={puzzle} />;
+  }
+
+  if (puzzle.type === "word-detective") {
+    return <WordDetectiveGame puzzle={puzzle} />;
+  }
+
+  if (puzzle.type === "word-ladder") {
+    return <WordLadderGame puzzle={puzzle} />;
   }
 
 

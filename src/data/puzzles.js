@@ -63,6 +63,28 @@ export const puzzles = [
     estimatedTime: "3 minutes",
     question: "Crack the secret code based on the examples."
   },
+  {
+    id: 19,
+    title: "Mystery Word Detective",
+    displayName: "Mystery Word Detective",
+    difficulty: "Medium",
+    type: "word-detective",
+    category: "logic",
+    description: "Crack the mystery word using deductive reasoning and step-by-step clues.",
+    estimatedTime: "3 minutes",
+    question: "Deduce the mystery word from the clues provided."
+  },
+  {
+    id: 20,
+    title: "Word Ladder Challenge",
+    displayName: "Word Ladder Challenge",
+    difficulty: "Medium",
+    type: "word-ladder",
+    category: "logic",
+    description: "Transform one word into another by changing one letter at a time.",
+    estimatedTime: "3 minutes",
+    question: "Fill in the missing words to complete the word ladder."
+  },
 
   // ── Brain Training & Cognitive Skills Puzzles ──
   {

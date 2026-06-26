@@ -9,7 +9,9 @@ export default function ReviewCard({ puzzle, answer }) {
     "pattern-detective",
     "elimination-grid",
     "number-matrix",
-    "code-breaker"
+    "code-breaker",
+    "word-detective",
+    "word-ladder"
   ].includes(puzzle.type);
 
   if (isCustomGame) {
@@ -98,6 +100,25 @@ export default function ReviewCard({ puzzle, answer }) {
                       })}
                     </div>
                   )}
+
+                  {puzzle.type === "word-detective" && (
+                    <div className="w-full text-left space-y-1.5 p-4 bg-gray-50/50 rounded-xl border border-saathi-line font-semibold text-xs text-saathi-ink animate-[brain-fade-in_0.3s_ease-out]">
+                      <p className="text-[10px] font-black uppercase text-saathi-muted block mb-1">Clues:</p>
+                      {res.sequence.map((clue, sIdx) => (
+                        <p key={sIdx} className="flex gap-2">
+                          <span className="text-saathi-indigo font-bold">•</span>
+                          <span>{clue}</span>
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  {puzzle.type === "word-ladder" && (
+                    <div className="w-full text-center p-3.5 bg-gray-50/50 rounded-xl border border-saathi-line font-bold text-xs text-saathi-ink animate-[brain-fade-in_0.3s_ease-out]">
+                      <span className="text-[10px] font-black uppercase text-saathi-muted block mb-1.5 text-left">Correct Ladder Path:</span>
+                      <span className="text-sm font-black tracking-wide text-saathi-indigo">{res.sequence.join(" → ")}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Answers & Rule */}
@@ -113,7 +134,9 @@ export default function ReviewCard({ puzzle, answer }) {
                     <span className="text-saathi-green font-bold">{res.correctAnswer}</span>
                   </p>
                   <div className="mt-3 p-3 bg-emerald-50 text-saathi-green rounded-xl border border-emerald-100 font-extrabold text-[11px] leading-relaxed">
-                    <span className="text-[9px] font-black uppercase text-saathi-muted block mb-0.5">Pattern Rule</span>
+                    <span className="text-[9px] font-black uppercase text-saathi-muted block mb-0.5">
+                      {puzzle.type === "word-detective" ? "Explanation" : "Pattern Rule"}
+                    </span>
                     {res.rule}
                   </div>
                 </div>

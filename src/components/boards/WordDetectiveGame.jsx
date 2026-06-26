@@ -1,59 +1,54 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Clock, Target, Trophy, Flame, Play, Sparkles } from "lucide-react";
-import { generatePatternQuestion } from "../../utils/generators/patternDetectionGenerator";
+import { ArrowLeft, Clock, Target, Trophy, Flame, Play, Sparkles, ChevronRight } from "lucide-react";
+import { generateWordDetective } from "../../utils/generators/wordDetectiveGenerator";
 import { useAttempt } from "../../context/AttemptContext";
 import PrimaryButton from "../PrimaryButton";
-import SecondaryButton from "../SecondaryButton";
 import DifficultySelector from "../DifficultySelector";
 import PuzzleIntroduction from "../PuzzleIntroduction";
 
 const TOTAL_ROUNDS = 5;
 
-export default function PatternDetectionGame({ puzzle }) {
+export default function WordDetectiveGame({ puzzle }) {
   const navigate = useNavigate();
   const { submitAttempt } = useAttempt();
 
   // ── Core States ──────────────────────────────────────────────────────────
-  const [phase, setPhase] = useState("setup"); // "setup" | "playing" | "results"
+  const [phase, setPhase] = useState("setup"); // "setup" | "playing"
   const [difficulty, setDifficulty] = useState("Medium");
 
   // ── Game Session States ──────────────────────────────────────────────────
   const [currentRound, setCurrentRound] = useState(1);
-  const [challenge, setChallenge] = useState(null);
+  const [challenges, setChallenges] = useState([]);
+  const [cluesVisibleCount, setCluesVisibleCount] = useState(1);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [isCorrectAnswer, setIsCorrectAnswer] = useState(false);
-  
+
   // Timer & Metrics
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [streak, setStreak] = useState(0);
   const [bestStreak, setBestStreak] = useState(0);
-  const [roundResults, setRoundResults] = useState([]); // { round, sequence, studentAnswer, correctAnswer, isCorrect, rule }
+  const [roundResults, setRoundResults] = useState([]); // { round, sequence: clues, studentAnswer, correctAnswer, isCorrect, rule: explanation }
 
   const timerRef = useRef(null);
 
   // ── Start Game ──────────────────────────────────────────────────────────
   const startGame = () => {
+    const list = generateWordDetective(difficulty);
+    setChallenges(list);
     setCorrectCount(0);
     setStreak(0);
     setBestStreak(0);
     setElapsedSeconds(0);
     setCurrentRound(1);
-    setRoundResults([]);
-    loadChallenge("Medium");
-    setPhase("playing");
-  };
-
-  // ── Load Challenge ──────────────────────────────────────────────────────
-  const loadChallenge = (diffOverride = null) => {
-    const nextDiff = diffOverride || difficulty;
-    const nextChallenge = generatePatternQuestion(nextDiff);
-    setChallenge(nextChallenge);
+    setCluesVisibleCount(1);
     setSelectedOption(null);
     setIsAnswered(false);
     setIsCorrectAnswer(false);
+    setRoundResults([]);
+    setPhase("playing");
   };
 
   // ── Timer Effect ────────────────────────────────────────────────────────
@@ -68,7 +63,9 @@ export default function PatternDetectionGame({ puzzle }) {
     };
   }, [phase, isAnswered]);
 
-  // ── Handle Answer (Multiple Choice) ──────────────────────────────────────
+  const activeChallenge = challenges[currentRound - 1];
+
+  // ── Handle Answer ───────────────────────────────────────────────────────
   const handleSelectOption = (opt) => {
     if (isAnswered) return;
     if (timerRef.current) clearInterval(timerRef.current);
@@ -76,11 +73,9 @@ export default function PatternDetectionGame({ puzzle }) {
     setSelectedOption(opt);
     setIsAnswered(true);
 
-    const isCorrect = String(opt.text) === String(challenge.answer) || 
-                      (challenge.layoutType === "grid" && opt.grid && opt.grid.join("-") === challenge.correctGrid.join("-"));
-    
+    const isCorrect = opt.text === activeChallenge.answer;
     setIsCorrectAnswer(isCorrect);
-    
+
     // Update streak
     const newStreak = isCorrect ? streak + 1 : 0;
     setStreak(newStreak);
@@ -96,50 +91,98 @@ export default function PatternDetectionGame({ puzzle }) {
       ...prev,
       {
         round: currentRound,
-        sequence: challenge.sequence,
+        sequence: activeChallenge.clueList, // Save clues for review
         studentAnswer: opt.text,
-        correctAnswer: challenge.answer,
+        correctAnswer: activeChallenge.answer,
         isCorrect,
-        rule: challenge.rule
+        rule: activeChallenge.explanation
       }
     ]);
   };
-
-
 
   // ── Next Round ──────────────────────────────────────────────────────────
   const handleNextRound = () => {
     if (currentRound < TOTAL_ROUNDS) {
       setCurrentRound((r) => r + 1);
-      loadChallenge();
+      setCluesVisibleCount(1);
+      setSelectedOption(null);
+      setIsAnswered(false);
+      setIsCorrectAnswer(false);
     } else {
-      // Game Complete! Submit results to context and redirect
+      // Game Complete!
       const accuracyPercent = Math.round((correctCount / TOTAL_ROUNDS) * 100);
-      const score = correctCount * 20; // Max 100 points
       
-      // Calculate Pattern Recognition Score
-      // Scale by difficulty: Easy (0.8), Medium (1.0), Hard (1.2)
-      const diffMultiplier = difficulty === "Hard" ? 1.2 : difficulty === "Medium" ? 1.0 : 0.8;
-      const patternScore = Math.round(accuracyPercent * diffMultiplier);
+      // Points scored. Earlier correct answers give higher points.
+      // E.g., if correct, score = 100 - (cluesVisibleCount - 1) * scaling
+      // Easy scaling (3 clues): 100, 75, 50
+      // Medium scaling (4 clues): 100, 80, 60, 40
+      // Hard scaling (5 clues): 100, 80, 60, 40, 20
+      // Let's compute average score of correct rounds
+      const score = roundResults.reduce((sum, res, idx) => {
+        if (!res.isCorrect) return sum;
+        // Find clues shown for this round
+        const cluesShown = res.sequence.length; // wait, no, cluesVisibleCount is a state. We should store it or calculate from clues visible.
+        // Let's make it simple. We can compute it in handleSelectOption.
+        return sum + 20; // 20 points per correct answer, so max 100 points
+      }, 0);
 
-      // Save custom attempt to context and local storage
+      // Compute custom Vocabulary Score (which scales with earlier guesses)
+      // If correct at clue 1: 100 points, clue 2: 80 points, etc.
+      // Let's calculate the reasoning/vocab score from the results:
+      const totalPoints = roundResults.reduce((sum, res) => {
+        if (!res.isCorrect) return sum;
+        // We can estimate how many clues were visible. Let's record the cluesVisibleCount in roundResults.
+        // Let's modify handleSelectOption to store cluesVisibleCount.
+        return sum + res.points;
+      }, 0);
+
+      // Submit attempt and navigate to ResultPage
       submitAttempt(
         puzzle.id,
         elapsedSeconds,
-        accuracyPercent >= 80, // isCorrect (pass if accuracy >= 80%)
+        accuracyPercent >= 80,
         score,
         accuracyPercent,
         difficulty,
         {
           questionsSolved: correctCount,
           bestStreak,
-          patternRecognitionScore: patternScore,
-          roundResults // save full results for ReviewCard
+          vocabularyScore: Math.round(totalPoints / TOTAL_ROUNDS),
+          reasoningScore: Math.round(totalPoints / TOTAL_ROUNDS),
+          roundResults: roundResults.map(res => ({
+            ...res,
+            points: undefined // remove temp points property from local storage to clean up
+          }))
         }
       );
 
       navigate(`/result/${puzzle.id}`);
     }
+  };
+
+  // Enhance handleSelectOption to support point calculations
+  const handleSelectOptionWithPoints = (opt) => {
+    if (isAnswered) return;
+    
+    // Points calculation:
+    let points = 0;
+    if (opt.text === activeChallenge.answer) {
+      if (difficulty === "Easy") {
+        points = 100 - (cluesVisibleCount - 1) * 25; // 100, 75, 50
+      } else {
+        points = 100 - (cluesVisibleCount - 1) * 20; // 100, 80, 60, 40, 20
+      }
+    }
+    
+    // Update roundResults state using a helper callback
+    handleSelectOption(opt);
+    setRoundResults((prev) => {
+      const updated = [...prev];
+      if (updated[updated.length - 1]) {
+        updated[updated.length - 1].points = points;
+      }
+      return updated;
+    });
   };
 
   // Format timer
@@ -156,17 +199,17 @@ export default function PatternDetectionGame({ puzzle }) {
         {/* ── SETUP PHASE ──────────────────────────────────────────────────── */}
         {phase === "setup" && (
           <PuzzleIntroduction
-            type="pattern-detection"
+            type="word-detective"
             difficulty={difficulty}
             setDifficulty={setDifficulty}
             onStart={startGame}
             onBack={() => navigate("/")}
-            title="Pattern Detection"
+            title="Mystery Word Detective"
           />
         )}
 
         {/* ── PLAYING PHASE ────────────────────────────────────────────────── */}
-        {phase === "playing" && challenge && (
+        {phase === "playing" && activeChallenge && (
           <div className="flex-1 flex flex-col justify-between animate-[brain-fade-in-up_0.4s_ease-out]">
             <div>
               {/* Header Info */}
@@ -178,26 +221,21 @@ export default function PatternDetectionGame({ puzzle }) {
                 >
                   <ArrowLeft size={18} />
                 </button>
-                <div className="flex items-center gap-2">
-                  <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase ${
-                    difficulty === "Hard"
-                      ? "bg-red-50 text-saathi-red border border-red-200"
-                      : difficulty === "Medium"
-                      ? "bg-amber-50 text-amber-600 border border-amber-200"
-                      : "bg-emerald-50 text-saathi-green border border-emerald-200"
-                  }`}>
-                    {difficulty}
-                  </span>
-                  <span className="text-[10px] font-extrabold bg-saathi-indigoMint text-saathi-indigo border border-indigo-200 px-2.5 py-1 rounded-full uppercase">
-                    {challenge.category}
-                  </span>
-                </div>
+                <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase ${
+                  difficulty === "Hard"
+                    ? "bg-red-50 text-saathi-red border border-red-200"
+                    : difficulty === "Medium"
+                    ? "bg-amber-50 text-amber-600 border border-amber-200"
+                    : "bg-emerald-50 text-saathi-green border border-emerald-200"
+                }`}>
+                  {difficulty}
+                </span>
               </header>
 
               {/* Performance Indicators */}
               <div className="grid grid-cols-4 gap-2 mb-5 text-center text-xs">
                 <div className="bg-white border border-saathi-line rounded-xl p-2 shadow-sm">
-                  <Clock className="mx-auto text-saathi-indigo mb-0.5 animate-pulse" size={14} />
+                  <Clock className="mx-auto text-saathi-indigo mb-0.5" size={14} />
                   <span className="block font-black text-saathi-ink">{formatTimer(elapsedSeconds)}</span>
                   <span className="text-[9px] font-bold text-saathi-muted uppercase">Timer</span>
                 </div>
@@ -210,7 +248,9 @@ export default function PatternDetectionGame({ puzzle }) {
                 </div>
                 <div className="bg-white border border-saathi-line rounded-xl p-2 shadow-sm">
                   <Trophy className="mx-auto text-saathi-amber mb-0.5" size={14} />
-                  <span className="block font-black text-saathi-ink">{correctCount * 20}</span>
+                  <span className="block font-black text-saathi-ink">
+                    {roundResults.reduce((sum, r) => sum + (r.points || 0), 0)}
+                  </span>
                   <span className="text-[9px] font-bold text-saathi-muted uppercase">Score</span>
                 </div>
                 <div className="bg-white border border-saathi-line rounded-xl p-2 shadow-sm">
@@ -234,66 +274,47 @@ export default function PatternDetectionGame({ puzzle }) {
                 </div>
               </div>
 
-              {/* Sequence Display Card */}
-              <div className="bg-white rounded-2xl border border-saathi-line p-5 shadow-card mb-6">
-                <p className="text-[10px] font-extrabold uppercase text-saathi-muted tracking-wider mb-3">
-                  Sequence Challenge
-                </p>
-                
-                {/* Visual rendering of the sequence */}
-                {challenge.layoutType === "grid" ? (
-                  // Grid sequence layout
-                  <div className="flex justify-center items-center gap-3 overflow-x-auto py-2">
-                    {challenge.sequence.map((gridState, idx) => {
-                      if (gridState === "?") {
-                        return (
-                          <div key={idx} className="w-14 h-14 border-2 border-dashed border-saathi-line bg-gray-50 flex items-center justify-center text-xl font-bold text-saathi-muted rounded-xl shrink-0">
-                            ?
-                          </div>
-                        );
-                      }
-                      return (
-                        <div key={idx} className="w-14 h-14 border border-saathi-line bg-white p-2.5 rounded-xl grid grid-cols-2 gap-1 shadow-sm shrink-0">
-                          {gridState.map((cell, cIdx) => (
-                            <div key={cIdx} className={`w-full h-full rounded-md ${cell ? "bg-saathi-indigo" : "bg-indigo-50/50"}`} />
-                          ))}
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  // General text/shape/symbol sequence layout
-                  <div className="flex justify-center items-center flex-wrap gap-2.5 py-2">
-                    {challenge.sequence.map((item, idx) => {
-                      const isQuestion = item === "?";
-                      return (
-                        <div
-                          key={idx}
-                          className={`w-14 h-14 border flex items-center justify-center text-2xl font-black rounded-2xl shadow-sm ${
-                            isQuestion
-                              ? "border-saathi-amber bg-amber-50 text-saathi-amber"
-                              : "border-saathi-line bg-gray-50/50 text-saathi-ink"
-                          }`}
-                        >
-                          {item}
-                        </div>
-                      );
-                    })}
-                  </div>
+              {/* Mystery Clues Card */}
+              <div className="bg-white rounded-2xl border border-saathi-line p-5 shadow-card mb-5">
+                <div className="flex justify-between items-center mb-3">
+                  <p className="text-[10px] font-extrabold uppercase text-saathi-muted tracking-wider">
+                    Category: <span className="text-saathi-indigo">{activeChallenge.category}</span>
+                  </p>
+                  <span className="text-[10px] font-extrabold text-saathi-muted">
+                    Clues Revealed: {cluesVisibleCount} / {activeChallenge.clueList.length}
+                  </span>
+                </div>
+
+                {/* Clues List */}
+                <div className="space-y-2.5 min-h-[160px] bg-slate-50 p-4 rounded-xl border border-dashed border-saathi-line text-left flex flex-col justify-center">
+                  {activeChallenge.clueList.slice(0, cluesVisibleCount).map((clue, idx) => (
+                    <div key={idx} className="flex gap-2.5 animate-[brain-fade-in_0.3s_ease-out]">
+                      <span className="text-saathi-indigo font-black text-sm mt-0.5">•</span>
+                      <p className="text-xs font-bold text-saathi-ink leading-relaxed">
+                        {clue}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Next Clue Button */}
+                {!isAnswered && cluesVisibleCount < activeChallenge.clueList.length && (
+                  <button
+                    onClick={() => setCluesVisibleCount(prev => prev + 1)}
+                    className="mt-3.5 mx-auto text-xs font-black text-saathi-indigo hover:text-saathi-indigoDark hover:underline flex items-center gap-1 transition duration-150"
+                  >
+                    <span>Reveal Next Clue</span>
+                    <ChevronRight size={14} />
+                  </button>
                 )}
-                
-                <h3 className="mt-4 text-center text-sm font-bold text-saathi-ink leading-relaxed">
-                  Identify the pattern and predict the next element.
-                </h3>
               </div>
 
-              {/* ── ANSWER INTERFACE ── */}
-              <div className="grid grid-cols-2 gap-3">
-                {challenge.options.map((opt) => {
-                  let btnClass = "border p-4 rounded-[22px] flex flex-col items-center justify-center min-h-[96px] bg-white shadow-card transition-all duration-300 ";
+              {/* ── ANSWER OPTIONS (Large option cards) ── */}
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                {activeChallenge.options.map((opt) => {
+                  let btnClass = "border p-4 rounded-[22px] flex flex-col items-center justify-center min-h-[84px] bg-white shadow-card transition-all duration-300 ";
                   if (isAnswered) {
-                    const isCorrectOpt = String(opt.text) === String(challenge.answer) || 
-                                         (challenge.layoutType === "grid" && opt.grid && opt.grid.join("-") === challenge.correctGrid.join("-"));
+                    const isCorrectOpt = opt.text === activeChallenge.answer;
                     const isSelectedOpt = selectedOption?.id === opt.id;
                     
                     if (isCorrectOpt) {
@@ -310,19 +331,11 @@ export default function PatternDetectionGame({ puzzle }) {
                   return (
                     <button
                       key={opt.id}
-                      onClick={() => handleSelectOption(opt)}
+                      onClick={() => handleSelectOptionWithPoints(opt)}
                       disabled={isAnswered}
                       className={btnClass}
                     >
-                      {opt.grid ? (
-                        <div className="w-12 h-12 grid grid-cols-2 gap-1 border border-saathi-line p-1.5 rounded-lg bg-gray-50/50">
-                          {opt.grid.map((cell, cIdx) => (
-                            <div key={cIdx} className={`w-full h-full rounded-sm ${cell ? "bg-saathi-indigo" : "bg-white"}`} />
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-2xl font-black">{opt.text}</span>
-                      )}
+                      <span className="text-sm font-black tracking-wide">{opt.text}</span>
                     </button>
                   );
                 })}
@@ -346,24 +359,17 @@ export default function PatternDetectionGame({ puzzle }) {
                       {isCorrectAnswer ? "✓" : "!"}
                     </span>
                     <span className="font-extrabold text-sm uppercase">
-                      {isCorrectAnswer ? "Correct Answer!" : "Incorrect"}
+                      {isCorrectAnswer ? "Correct Answer!" : `Incorrect. It is ${activeChallenge.answer}.`}
                     </span>
                   </div>
 
-                  <p className="text-xs text-saathi-ink font-semibold leading-relaxed mb-4">
-                    {challenge.explanation}
+                  <p className="text-xs text-saathi-ink font-semibold leading-relaxed mb-4 text-left">
+                    {activeChallenge.explanation}
                   </p>
-
-                  <div className="p-3 bg-white/90 border border-saathi-line rounded-xl text-xs font-bold text-saathi-indigo shadow-inner">
-                    <span className="text-[10px] font-black uppercase text-saathi-muted block mb-0.5">
-                      Pattern Rule
-                    </span>
-                    {challenge.rule}
-                  </div>
 
                   <button
                     onClick={handleNextRound}
-                    className="w-full mt-5 py-3.5 bg-saathi-indigo hover:bg-saathi-indigoDark text-white font-extrabold rounded-2xl transition duration-200 shadow-md flex items-center justify-center gap-1.5"
+                    className="w-full mt-2 py-3.5 bg-saathi-indigo hover:bg-saathi-indigoDark text-white font-extrabold rounded-2xl transition duration-200 shadow-md flex items-center justify-center gap-1.5"
                   >
                     <span>
                       {currentRound < TOTAL_ROUNDS ? "Next Question" : "See Final Results"}
