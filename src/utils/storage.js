@@ -124,6 +124,7 @@ export function getStudentProgress() {
       bestPuzzle: 'None',
       mostPlayedPuzzle: 'None',
       streak,
+      achievements,
       skills: { 
         speed: 50, accuracy: 50, memory: 50, attention: 50, reasoning: 50, focus: 50, observation: 50, cognitiveControl: 50, analytical: 50,
         mentalRotation: 50, spatialReasoning: 50, directionSense: 50, spatialOrientation: 50, visualProcessing: 50, objectOrientation: 50, patternRecognition: 50
