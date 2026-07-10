@@ -251,7 +251,7 @@ export default function RuleDiscoveryPage() {
               {/* Stepper HUD */}
               <header className="mb-4">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-saathi-indigo">Round {currentRound} of {TOTAL_ROUNDS}</span>
+                  <span className="text-xs font-bold text-saathi-indigo">Round {currentRound - 1} of {TOTAL_ROUNDS}</span>
                   <span className="text-xs font-semibold text-saathi-muted">Time: {roundTimer}s</span>
                   
                   {/* Hint Button */}
@@ -273,7 +273,7 @@ export default function RuleDiscoveryPage() {
                 <div className="w-full h-2 bg-indigo-100 rounded-full overflow-hidden">
                   <div 
                     className="h-full bg-saathi-indigo transition-all duration-300"
-                    style={{ width: `${(currentRound / TOTAL_ROUNDS) * 100}%` }}
+                    style={{ width: `${((currentRound - 1) / TOTAL_ROUNDS) * 100}%` }}
                   />
                 </div>
               </header>

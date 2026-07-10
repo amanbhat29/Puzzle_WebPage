@@ -276,12 +276,12 @@ export default function WordLadderGame({ puzzle }) {
               <div className="mb-6">
                 <div className="flex justify-between text-[10px] font-bold text-saathi-muted mb-1.5">
                   <span>ROUND PROGRESS</span>
-                  <span>{currentRound} / {TOTAL_ROUNDS}</span>
+                  <span>{currentRound - 1} / {TOTAL_ROUNDS}</span>
                 </div>
                 <div className="w-full h-2.5 bg-saathi-line rounded-full overflow-hidden">
                   <div
                     className="h-full bg-saathi-indigo rounded-full transition-all duration-300"
-                    style={{ width: `${(currentRound / TOTAL_ROUNDS) * 100}%` }}
+                    style={{ width: `${((currentRound - 1) / TOTAL_ROUNDS) * 100}%` }}
                   />
                 </div>
               </div>

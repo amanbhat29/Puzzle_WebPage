@@ -461,7 +461,7 @@ export default function DirectionNavigatorPage() {
               {/* Header stats */}
               <header className="flex justify-between items-center mb-4">
                 <div className="text-xs font-extrabold text-saathi-indigo uppercase tracking-wider">
-                  Round {round} of {totalQuestions}
+                  Round {round - 1} of {totalQuestions}
                 </div>
                 <div className="text-right">
                   <span className="text-[10px] text-saathi-muted font-bold block uppercase">Points</span>
@@ -473,7 +473,7 @@ export default function DirectionNavigatorPage() {
               <div className="w-full h-1.5 bg-saathi-line rounded-full mb-4 overflow-hidden">
                 <div 
                   className="h-full bg-saathi-indigo transition-all duration-300"
-                  style={{ width: `${(round / totalQuestions) * 100}%` }}
+                  style={{ width: `${((round - 1) / totalQuestions) * 100}%` }}
                 />
               </div>
 
