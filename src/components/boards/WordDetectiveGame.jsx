@@ -6,6 +6,7 @@ import { useAttempt } from "../../context/AttemptContext";
 import PrimaryButton from "../PrimaryButton";
 import DifficultySelector from "../DifficultySelector";
 import PuzzleIntroduction from "../PuzzleIntroduction";
+import { getUniqueQuestion } from "../../utils/nonRepeatingGenerator";
 
 const TOTAL_ROUNDS = 5;
 
@@ -36,7 +37,7 @@ export default function WordDetectiveGame({ puzzle }) {
 
   // ── Start Game ──────────────────────────────────────────────────────────
   const startGame = () => {
-    const list = generateWordDetective(difficulty);
+    const list = getUniqueQuestion(`word-detective-${difficulty}`, () => generateWordDetective(difficulty), (l) => l.map(c => c.word).join(','));
     setChallenges(list);
     setCorrectCount(0);
     setStreak(0);

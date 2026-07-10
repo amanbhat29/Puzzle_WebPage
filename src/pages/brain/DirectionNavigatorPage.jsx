@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Target, Clock, Award, Star, RotateCcw, HelpCircle } from 'lucide-react';
 import { savePuzzleResult } from '../../utils/storage';
+import { getUniqueQuestion } from '../../utils/nonRepeatingGenerator';
 
 // Grid size configuration
 const GRID_SIZE = 5;
@@ -139,16 +140,11 @@ export default function DirectionNavigatorPage() {
     }
   };
 
-  // ── Question Generator ───────────────────────────────────────────────────
-  const generateQuestion = useCallback((diff, currentRound) => {
+  const generateQuestionData = useCallback((diff) => {
     const config = getDifficultyConfig(diff);
     
     // 1. Generate path
     const path = generateRandomPath(config.numMovements);
-    setStartPos(path.start);
-    setEndPos(path.end);
-    setMovements(path.steps);
-    setFullPath(path.visited);
 
     // 2. Select Question Type
     // Easy: Type 1 & 2. Medium: Type 1, 2, 3. Hard: Type 1, 2, 3, 4.
@@ -161,20 +157,13 @@ export default function DirectionNavigatorPage() {
     } else {
       type = rand < 0.25 ? 1 : rand < 0.5 ? 2 : rand < 0.75 ? 3 : 4;
     }
-    setQuestionType(type);
-
-    // 3. Reset states for animation
-    setAnimationPhase('animating');
-    setAnimatedCells([path.start]);
-    setAnimatedCharacterPos(path.start);
-    setAnimationStepIndex(0);
-    setUserSelectedCell(null);
-    setUserSelectedOptionIdx(null);
-    setFeedbackStatus(null);
 
     // 4. Set up Options based on Question Type
     const correctDir = getRelativeDirection(path.start, path.end);
     const manhattanDist = Math.abs(path.end[0] - path.start[0]) + Math.abs(path.end[1] - path.start[1]);
+
+    let options = [];
+    let correctOptionIdx = null;
 
     if (type === 2) {
       // Direction options
@@ -186,8 +175,8 @@ export default function DirectionNavigatorPage() {
       const combined = [correctDir, ...pool].sort(() => Math.random() - 0.5);
       const newCorrectIdx = combined.indexOf(correctDir);
       
-      setOptions(combined);
-      setCorrectOptionIdx(newCorrectIdx);
+      options = combined;
+      correctOptionIdx = newCorrectIdx;
     } else if (type === 3) {
       // Steps away options
       const correctVal = `${manhattanDist} steps`;
@@ -202,8 +191,8 @@ export default function DirectionNavigatorPage() {
       const combined = Array.from(choices).sort(() => Math.random() - 0.5);
       const newCorrectIdx = combined.indexOf(correctVal);
       
-      setOptions(combined);
-      setCorrectOptionIdx(newCorrectIdx);
+      options = combined;
+      correctOptionIdx = newCorrectIdx;
     } else if (type === 4) {
       // Correct path sequence option
       const formatPathString = (steps) => steps.map(s => `${s.distance} ${s.direction}`).join(' → ');
@@ -226,11 +215,35 @@ export default function DirectionNavigatorPage() {
       const combined = Array.from(choices).sort(() => Math.random() - 0.5);
       const newCorrectIdx = combined.indexOf(correctPathStr);
       
-      setOptions(combined);
-      setCorrectOptionIdx(newCorrectIdx);
+      options = combined;
+      correctOptionIdx = newCorrectIdx;
     }
 
+    return { path, type, options, correctOptionIdx };
   }, []);
+
+  // ── Question Generator ───────────────────────────────────────────────────
+  const generateQuestion = useCallback((diff, currentRound) => {
+    const data = getUniqueQuestion(`direction-${diff}`, () => generateQuestionData(diff), (q) => q.path.steps.map(s => s.direction + s.distance).join(',') + '-' + q.type);
+    
+    setStartPos(data.path.start);
+    setEndPos(data.path.end);
+    setMovements(data.path.steps);
+    setFullPath(data.path.visited);
+    setQuestionType(data.type);
+
+    // 3. Reset states for animation
+    setAnimationPhase('animating');
+    setAnimatedCells([data.path.start]);
+    setAnimatedCharacterPos(data.path.start);
+    setAnimationStepIndex(0);
+    setUserSelectedCell(null);
+    setUserSelectedOptionIdx(null);
+    setFeedbackStatus(null);
+
+    setOptions(data.options);
+    setCorrectOptionIdx(data.correctOptionIdx);
+  }, [generateQuestionData]);
 
   // ── Traversal Animation loop ──────────────────────────────────────────────
   useEffect(() => {

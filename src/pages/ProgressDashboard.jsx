@@ -261,29 +261,6 @@ export default function ProgressDashboard() {
                           style={{ width: `${rating}%` }}
                         />
                       </div>
-                      {/* Trend Indicator */}
-                      <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5 shrink-0 ${
-                          change > 0
-                            ? "bg-emerald-50 text-saathi-green"
-                            : change < 0
-                            ? "bg-red-50 text-saathi-red"
-                            : "bg-gray-50 text-saathi-muted"
-                        }`}
-                      >
-                        {change > 0 ? (
-                          <>
-                            <TrendingUp size={10} />+{change}%
-                          </>
-                        ) : change < 0 ? (
-                          <>
-                            <TrendingDown size={10} />
-                            {change}%
-                          </>
-                        ) : (
-                          "0%"
-                        )}
-                      </span>
                     </div>
                   </div>
                 );

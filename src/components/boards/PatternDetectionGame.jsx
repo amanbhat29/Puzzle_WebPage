@@ -7,6 +7,7 @@ import PrimaryButton from "../PrimaryButton";
 import SecondaryButton from "../SecondaryButton";
 import DifficultySelector from "../DifficultySelector";
 import PuzzleIntroduction from "../PuzzleIntroduction";
+import { getUniqueQuestion } from "../../utils/nonRepeatingGenerator";
 
 const TOTAL_ROUNDS = 5;
 
@@ -49,7 +50,7 @@ export default function PatternDetectionGame({ puzzle }) {
   // ── Load Challenge ──────────────────────────────────────────────────────
   const loadChallenge = (diffOverride = null) => {
     const nextDiff = diffOverride || difficulty;
-    const nextChallenge = generatePatternQuestion(nextDiff);
+    const nextChallenge = getUniqueQuestion(`pattern-detection-${nextDiff}`, () => generatePatternQuestion(nextDiff), (q) => JSON.stringify(q.sequence));
     setChallenge(nextChallenge);
     setSelectedOption(null);
     setIsAnswered(false);

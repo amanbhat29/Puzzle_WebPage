@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Target, Clock, Award, Star, RotateCcw, HelpCircle, Check, X, Trophy, Zap, RotateCw } from 'lucide-react';
 import { savePuzzleResult } from '../../utils/storage';
+import { getUniqueQuestion } from '../../utils/nonRepeatingGenerator';
 
 // Helper to generate a random connected shape
 function generateRandomShape(size) {
@@ -131,8 +132,7 @@ export default function ShapeRotationPage() {
     }
   };
 
-  // ── Question Generator ───────────────────────────────────────────────────
-  const generateQuestion = useCallback((diff) => {
+  const generateQuestionData = useCallback((diff) => {
     const config = getDifficultyConfig(diff);
     const size = config.shapeSize;
     const angles = config.possibleAngles;
@@ -203,15 +203,21 @@ export default function ShapeRotationPage() {
     // Find the correct index
     const correctIdx = allOptions.findIndex(opt => areShapesEqual(opt, correctShape));
 
-    setOriginalShape(shape);
-    setTargetRotation(angle);
-    setCorrectRotatedShape(correctShape);
-    setOptions(allOptions);
-    setCorrectIndex(correctIdx);
+    return { shape, angle, correctShape, allOptions, correctIdx };
+  }, []);
+
+  // ── Question Generator ───────────────────────────────────────────────────
+  const generateQuestion = useCallback((diff) => {
+    const data = getUniqueQuestion(`shape-rotation-${diff}`, () => generateQuestionData(diff), (q) => getShapeKey(q.shape) + '-' + q.angle);
+    setOriginalShape(data.shape);
+    setTargetRotation(data.angle);
+    setCorrectRotatedShape(data.correctShape);
+    setOptions(data.allOptions);
+    setCorrectIndex(data.correctIdx);
     setFeedbackIndex(null);
     setFeedbackStatus(null);
     setQuestionStartTime(Date.now());
-  }, []);
+  }, [generateQuestionData]);
 
   // ── Start Game ────────────────────────────────────────────────────────────
   const startGame = () => {

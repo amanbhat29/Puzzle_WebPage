@@ -6,6 +6,7 @@ import { useAttempt } from "../../context/AttemptContext";
 import PrimaryButton from "../PrimaryButton";
 import DifficultySelector from "../DifficultySelector";
 import PuzzleIntroduction from "../PuzzleIntroduction";
+import { getUniqueQuestion } from "../../utils/nonRepeatingGenerator";
 
 const TOTAL_ROUNDS = 5;
 
@@ -48,7 +49,7 @@ export default function CodeBreakerGame({ puzzle }) {
   // ── Load Challenge ──────────────────────────────────────────────────────
   const loadChallenge = (diffOverride = null) => {
     const nextDiff = diffOverride || difficulty;
-    const nextChallenge = generateCodeBreaker(nextDiff);
+    const nextChallenge = getUniqueQuestion(`code-breaker-${nextDiff}`, () => generateCodeBreaker(nextDiff), (q) => q.targetWord + "-" + q.answer);
     setChallenge(nextChallenge);
     setSelectedOption(null);
     setIsAnswered(false);

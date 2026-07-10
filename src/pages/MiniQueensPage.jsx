@@ -14,6 +14,7 @@ import {
 import { ACHIEVEMENTS, calculateScore, checkNewAchievements, getUnlockedAchievements } from "../utils/queensScoring";
 import { formatTimer } from "../utils/format";
 import { savePuzzleResult } from "../utils/storage";
+import { getUniqueQuestion } from "../utils/nonRepeatingGenerator";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MiniQueensPage — Full game page with difficulty selection, game play,
@@ -73,7 +74,7 @@ export default function MiniQueensPage() {
 
   const startGame = useCallback((diff) => {
     const cfg = DIFFICULTY_CONFIG[diff];
-    const newBoard = generateBoard(diff);
+    const newBoard = getUniqueQuestion("mini-queens", () => generateBoard(diff), (b) => b.queens.join(","));
     setDifficulty(diff);
     setBoard(newBoard);
     setGrid(createEmptyQueensGrid(cfg.size));
@@ -92,7 +93,7 @@ export default function MiniQueensPage() {
   const generateNewBoard = useCallback(() => {
     if (!difficulty) return;
     const cfg = DIFFICULTY_CONFIG[difficulty];
-    const newBoard = generateBoard(difficulty);
+    const newBoard = getUniqueQuestion("mini-queens", () => generateBoard(difficulty), (b) => b.queens.join(","));
     setBoard(newBoard);
     setGrid(createEmptyQueensGrid(cfg.size));
     setTimer(0);

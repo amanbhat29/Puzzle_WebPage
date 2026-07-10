@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Target, Clock, Award, Star, RotateCcw, HelpCircle } from 'lucide-react';
 import { savePuzzleResult } from '../../utils/storage';
+import { getUniqueQuestion } from '../../utils/nonRepeatingGenerator';
 
 // Grid dimension
 const GRID_SIZE = 3;
@@ -147,7 +148,7 @@ export default function MirrorDetectivePage() {
   };
 
   // ── Question Generator ───────────────────────────────────────────────────
-  const generateQuestion = useCallback((diff) => {
+  const generateQuestionData = useCallback((diff) => {
     const config = getDifficultyConfig(diff);
     
     // 1. Generate pattern
@@ -202,15 +203,21 @@ export default function MirrorDetectivePage() {
     // Find the correct index
     const correctIdx = allOptions.findIndex(opt => areGridsEqual(opt, transformed));
 
-    setOriginalGrid(pattern);
-    setTargetTransformName(transformName);
-    setCorrectGrid(transformed);
-    setOptions(allOptions);
-    setCorrectIndex(correctIdx);
+    return { pattern, transformName, transformed, allOptions, correctIdx };
+  }, []);
+
+  // ── Question Generator ───────────────────────────────────────────────────
+  const generateQuestion = useCallback((diff) => {
+    const data = getUniqueQuestion(`mirror-${diff}`, () => generateQuestionData(diff), (q) => getGridKey(q.pattern) + '-' + q.transformName);
+    setOriginalGrid(data.pattern);
+    setTargetTransformName(data.transformName);
+    setCorrectGrid(data.transformed);
+    setOptions(data.allOptions);
+    setCorrectIndex(data.correctIdx);
     setFeedbackIndex(null);
     setFeedbackStatus(null);
     setQuestionStartTime(Date.now());
-  }, []);
+  }, [generateQuestionData]);
 
   // ── Start Game ────────────────────────────────────────────────────────────
   const startGame = () => {

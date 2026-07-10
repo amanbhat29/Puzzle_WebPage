@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Target, Clock, Award, Star, Trophy, RotateCcw, Check, X, ShieldAlert } from 'lucide-react';
 import { savePuzzleResult } from '../../utils/storage';
+import { getUniqueQuestion } from '../../utils/nonRepeatingGenerator';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // FocusFilterPage — Selective Attention and Concentration Challenge.
@@ -254,7 +255,7 @@ export default function FocusFilterPage() {
     setTimeLeft(config.timer);
     setTotalRoundTime(config.timer);
 
-    const grid = generateGrid(diff, task);
+    const grid = getUniqueQuestion(`focus-filter-${diff}`, () => generateGrid(diff, task), (grid) => grid.map(cell => cell.value + '-' + cell.color).join(','));
     setGridItems(grid);
 
     const targetCount = grid.filter((item) => item.isTarget).length;

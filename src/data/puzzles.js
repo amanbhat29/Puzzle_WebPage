@@ -19,17 +19,7 @@ export const puzzles = [
     rules: ["One queen per row", "One queen per column", "No queens on the same diagonal"],
     explanation: "A queen attacks in the same row, same column, and diagonally. This solution places exactly one queen in every row and column, with no diagonal attacks."
   },
-  {
-    id: 3,
-    title: "Pattern Detection",
-    displayName: "Pattern Detection",
-    difficulty: "Easy",
-    type: "pattern-detection",
-    category: "logic",
-    description: "Train pattern recognition, sequence detection, and logical thinking.",
-    estimatedTime: "2 minutes",
-    question: "Complete the sequence by finding the next element."
-  },
+
   {
     id: 16,
     title: "Elimination Grid Challenge",

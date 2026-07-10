@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Lightbulb, CheckCircle, XCircle, Star, RotateCcw, Sparkles } from 'lucide-react';
 import { generatePatternChallenge } from '../../utils/generators/patternGenerator';
 import { savePuzzleResult } from '../../utils/storage';
+import { getUniqueQuestion } from '../../utils/nonRepeatingGenerator';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // RuleDiscoveryPage — A pattern sequence discovery game with 10 rounds.
@@ -50,7 +51,7 @@ export default function RuleDiscoveryPage() {
 
   // ── Load Challenge ──────────────────────────────────────────────────────
   const loadChallenge = useCallback((roundNum, diff) => {
-    const newChallenge = generatePatternChallenge(diff);
+    const newChallenge = getUniqueQuestion(`rule-discovery-${diff}`, () => generatePatternChallenge(diff), (q) => JSON.stringify(q.sequence));
     setChallenge(newChallenge);
     setSelectedOption(null);
     setIsAnswered(false);

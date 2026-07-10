@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Target, Clock, Award, Star, Trophy, RotateCcw, Check, X } from 'lucide-react';
 import { savePuzzleResult } from '../../utils/storage';
+import { getUniqueQuestion } from '../../utils/nonRepeatingGenerator';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // StroopPage — Color Word Conflict Challenge.
@@ -63,8 +64,7 @@ export default function StroopPage() {
     }
   }, []);
 
-  // ── Generate Question ────────────────────────────────────────────────────
-  const generateQuestion = useCallback((diff) => {
+  const generateQuestionData = useCallback((diff) => {
     const config = getDifficultyConfig(diff);
     
     // Pick target display color and text word (conflict!)
@@ -99,11 +99,17 @@ export default function StroopPage() {
 
     const questionOptions = Array.from(distractorSet).sort(() => Math.random() - 0.5);
 
-    setCurrentWord(word);
-    setCurrentColor(colorObj);
-    setOptions(questionOptions);
-    setQuestionStartTime(Date.now());
+    return { word, colorObj, questionOptions };
   }, [getDifficultyConfig]);
+
+  // ── Generate Question ────────────────────────────────────────────────────
+  const generateQuestion = useCallback((diff) => {
+    const data = getUniqueQuestion(`stroop-${diff}`, () => generateQuestionData(diff), (q) => q.word + '-' + q.colorObj.name);
+    setCurrentWord(data.word);
+    setCurrentColor(data.colorObj);
+    setOptions(data.questionOptions);
+    setQuestionStartTime(Date.now());
+  }, [generateQuestionData]);
 
   // ── Start Challenge ─────────────────────────────────────────────────────
   const startChallenge = () => {

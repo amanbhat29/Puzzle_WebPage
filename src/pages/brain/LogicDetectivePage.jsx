@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Lightbulb, Check, X, Search, RotateCcw, Star, HelpCircle, Award, Target, Clock } from 'lucide-react';
 import { generateLogicMystery } from '../../utils/generators/logicDetectiveGenerator';
+import { getUniqueQuestion } from '../../utils/nonRepeatingGenerator';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // LogicDetectivePage — A detective-style mystery game with an elimination grid.
@@ -31,7 +32,7 @@ export default function LogicDetectivePage() {
 
   // ── Start Investigation ─────────────────────────────────────────────────
   const startInvestigation = () => {
-    const p = generateLogicMystery(difficulty);
+    const p = getUniqueQuestion(`logic-detective-${difficulty}`, () => generateLogicMystery(difficulty), (q) => JSON.stringify(q.clues));
     setPuzzle(p);
     setTimer(0);
     setHintsUsed(0);

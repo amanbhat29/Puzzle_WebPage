@@ -4,6 +4,7 @@ import { ArrowLeft, Zap, Target, Clock, Award, Star, RotateCcw } from 'lucide-re
 import { generateMathQuestion } from '../../utils/generators/mathGenerator';
 import { formatTimer } from '../../utils/format';
 import { savePuzzleResult } from '../../utils/storage';
+import { getUniqueQuestion } from '../../utils/nonRepeatingGenerator';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MathReflexPage — 60-second rapid-fire math challenge game.
@@ -78,7 +79,7 @@ export default function MathReflexPage() {
     setResponseTimes([]);
     setFlashState(null);
 
-    const q = generateMathQuestion(difficulty);
+    const q = getUniqueQuestion('math-reflex', () => generateMathQuestion(difficulty), (q) => q.expression);
     setCurrentQuestion(q);
     setCurrentOptions(generateOptions(q.answer));
     setQuestionStartTime(Date.now());
@@ -179,7 +180,7 @@ export default function MathReflexPage() {
     flashTimeoutRef.current = setTimeout(() => {
       setFlashState(null);
       setSelectedAnswer(null);
-      const nextQ = generateMathQuestion(difficulty);
+      const nextQ = getUniqueQuestion('math-reflex', () => generateMathQuestion(difficulty), (q) => q.expression);
       setCurrentQuestion(nextQ);
       setCurrentOptions(generateOptions(nextQ.answer));
       setQuestionStartTime(Date.now());

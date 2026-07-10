@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Target, Clock, Award, Star, Trophy, RotateCcw, HelpCircle, Eye } from 'lucide-react';
 import { savePuzzleResult } from '../../utils/storage';
+import { getUniqueQuestion } from '../../utils/nonRepeatingGenerator';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // VisualRadarPage — Visual Attention Radar Game.
@@ -69,17 +70,8 @@ export default function VisualRadarPage() {
     }
   }, []);
 
-  // ── Generate Dynamic Board and Question ──────────────────────────────────
-  const generateBoardAndQuestion = useCallback((roundNum, diff) => {
+  const generateBoardAndQuestionData = useCallback((diff) => {
     const config = getDifficultyConfig(diff);
-    setGridSize(config.gridSize);
-    setRevealTimeLeft(config.duration);
-    setTotalRevealTime(config.duration);
-    setSelectedOption(null);
-    setGameState('countdown');
-    setCountdownNum(3);
-
-    // 1. Generate Board Grid Items
     const totalCells = config.gridSize * config.gridSize;
     const activeShapes = SHAPES.slice(0, config.shapesCount);
     const activeColors = COLORS.slice(0, config.colorsCount);
@@ -96,12 +88,25 @@ export default function VisualRadarPage() {
         colorName: color.name
       });
     }
-    setBoardItems(items);
 
-    // 2. Pre-generate Question based on board data
     const question = generateQuestionFromBoard(items, activeShapes, activeColors, diff);
-    setCurrentQuestion(question);
+    return { items, question };
   }, [getDifficultyConfig]);
+
+  // ── Generate Dynamic Board and Question ──────────────────────────────────
+  const generateBoardAndQuestion = useCallback((roundNum, diff) => {
+    const config = getDifficultyConfig(diff);
+    setGridSize(config.gridSize);
+    setRevealTimeLeft(config.duration);
+    setTotalRevealTime(config.duration);
+    setSelectedOption(null);
+    setGameState('countdown');
+    setCountdownNum(3);
+
+    const data = getUniqueQuestion(`visual-radar-${diff}`, () => generateBoardAndQuestionData(diff), (d) => d.question.questionText + '-' + d.question.correctAnswer);
+    setBoardItems(data.items);
+    setCurrentQuestion(data.question);
+  }, [getDifficultyConfig, generateBoardAndQuestionData]);
 
   // Question Generator Helper
   const generateQuestionFromBoard = (items, activeShapes, activeColors, diff) => {

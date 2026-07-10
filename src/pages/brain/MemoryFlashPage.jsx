@@ -4,6 +4,7 @@ import { ArrowLeft, Eye, EyeOff, Brain, RotateCcw, Star, CheckCircle, XCircle, A
 import { generateMemoryBoard } from '../../utils/generators/memoryGenerator';
 import { formatTimer } from '../../utils/format';
 import { savePuzzleResult } from '../../utils/storage';
+import { getUniqueQuestion } from '../../utils/nonRepeatingGenerator';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MemoryFlashPage — A memory pattern recall game with display/hide/recall phases.
@@ -55,7 +56,7 @@ export default function MemoryFlashPage() {
 
   // ── Load Round ──────────────────────────────────────────────────────────
   const loadRound = useCallback((roundNum, diff) => {
-    const newBoard = generateMemoryBoard(diff);
+    const newBoard = getUniqueQuestion(`memory-flash-${diff}`, () => generateMemoryBoard(diff), (b) => JSON.stringify(b.items.map(item => ({ val: item.value, type: item.type }))));
     setBoard(newBoard);
     setSubPhase('display');
     setTimeLeft(newBoard.displayTime);

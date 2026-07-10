@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Zap, Brain, Search, Eye, Trophy, Star, Medal, ChevronRight, RotateCcw, CheckCircle, XCircle, Target, Clock } from 'lucide-react';
 import { generateBrainCircuitRound, calculateBrainReport } from '../../utils/generators/brainCircuitGenerator';
 import { formatTimer } from '../../utils/format';
+import { getUniqueQuestion } from '../../utils/nonRepeatingGenerator';
 import BrainReportCard from '../../components/BrainReportCard';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -62,10 +63,10 @@ export default function BrainCircuitPage() {
   // ── Initialize Circuit ──────────────────────────────────────────────────
   const startCircuit = () => {
     // Generate configs for all 4 rounds upfront
-    const r1 = generateBrainCircuitRound(1);
-    const r2 = generateBrainCircuitRound(2);
-    const r3 = generateBrainCircuitRound(3);
-    const r4 = generateBrainCircuitRound(4);
+    const r1 = getUniqueQuestion('brain-circuit-r1', () => generateBrainCircuitRound(1), (q) => q.questions.map(x => x.expression).join(','));
+    const r2 = getUniqueQuestion('brain-circuit-r2', () => generateBrainCircuitRound(2), (q) => JSON.stringify(q.board.items.map(item => ({ val: item.value, type: item.type }))));
+    const r3 = getUniqueQuestion('brain-circuit-r3', () => generateBrainCircuitRound(3), (q) => JSON.stringify(q.mystery.clues));
+    const r4 = getUniqueQuestion('brain-circuit-r4', () => generateBrainCircuitRound(4), (q) => q.challenges.map(x => JSON.stringify(x.sequence)).join(','));
 
     setRoundConfigs({ 1: r1, 2: r2, 3: r3, 4: r4 });
     setRoundResults([]);
